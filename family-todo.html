@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family To-Do Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAF7F0;
+    --ink: #2E2A24;
+    --preschool: #F4C95D;
+    --appt: #E37B5D;
+    --shopping: #7FA37A;
+    --household: #6E8FA8;
+    --dog: #B08968;
+    --muted: #9A9284;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.035) 1px, transparent 0);
+    background-size: 18px 18px;
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+    padding: 20px 14px 60px;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  header { margin-bottom: 20px; }
+  h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .sub { font-size: 0.85rem; color: var(--muted); }
+  .add-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .add-row input[type="text"] {
+    flex: 1 1 180px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1.5px solid #E2DACB;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: #fff;
+  }
+  .add-row select {
+    padding: 10px 10px;
+    border-radius: 10px;
+    border: 1.5px solid #E2DACB;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background: #fff;
+  }
+  .add-row button {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: none;
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .add-row button:disabled { opacity: 0.5; }
+  .add-row button:active { transform: scale(0.97); }
+  .hide-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .hide-toggle input { accent-color: var(--ink); width: 15px; height: 15px; }
+  .category { margin-bottom: 22px; }
+  .cat-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    background: #F2EDE2;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 4px 6px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    border: 1px solid #EFE9DC;
+  }
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 8px;
+    border-bottom: 1px solid #F2EDE2;
+  }
+  .item:last-child { border-bottom: none; }
+  .item input[type="checkbox"] {
+    margin-top: 2px;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--ink);
+    flex-shrink: 0;
+  }
+  .item-text { flex: 1; font-size: 0.95rem; line-height: 1.35; }
+  .item.done .item-text { text-decoration: line-through; color: var(--muted); }
+  .item.pending { opacity: 0.5; }
+  .del-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+  }
+  .empty-cat { font-size: 0.85rem; color: var(--muted); padding: 10px 8px; font-style: italic; }
+  .loading, .fatal { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 0.9rem; }
+  .fatal { color: #8A3B24; }
+  .banner {
+    background: #FBEAE3;
+    color: #8A3B24;
+    border: 1px solid #E37B5D;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    margin-bottom: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Family To-Do Board</h1>
+    <div class="sub">Synced to Supabase.</div>
+  </header>
+
+  <div id="banner-slot"></div>
+
+  <div class="add-row">
+    <input type="text" id="newItemText" placeholder="Add a to-do..." />
+    <select id="newItemCat"></select>
+    <button id="addBtn">Add</button>
+  </div>
+
+  <label class="hide-toggle">
+    <input type="checkbox" id="hideCompletedToggle" />
+    Hide completed items
+  </label>
+
+  <div id="board" class="loading">Loading your list...</div>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://rmacrimrvkrenlhekjyc.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_vW1vNsIeR5F4edP2OXtfTg_SyPHK8wa';
+
+  const CATEGORIES = [
+    { id: 'preschool', label: 'Preschool', color: 'var(--preschool)' },
+    { id: 'appt', label: 'Appointments', color: 'var(--appt)' },
+    { id: 'shopping', label: 'Shopping', color: 'var(--shopping)' },
+    { id: 'household', label: 'Household', color: 'var(--household)' },
+    { id: 'dog', label: 'Dog & Pet Care', color: 'var(--dog)' },
+  ];
+
+  let items = [];
+  let hideCompleted = false;
+  let pendingIds = new Set();
+
+  const board = document.getElementById('board');
+  const bannerSlot = document.getElementById('banner-slot');
+  const newItemText = document.getElementById('newItemText');
+  const newItemCat = document.getElementById('newItemCat');
+  const addBtn = document.getElementById('addBtn');
+  const hideCompletedToggle = document.getElementById('hideCompletedToggle');
+
+  CATEGORIES.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = c.label;
+    newItemCat.appendChild(opt);
+  });
+
+  // --- Supabase REST helper -------------------------------------------
+  // Only the apikey header is sent. Newer sb_publishable_/sb_secret_ keys
+  // are not JWTs, so putting them in Authorization: Bearer gets rejected
+  // unless it exactly duplicates apikey - simplest to just omit it.
+  async function sb(path, options = {}) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+      ...options,
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        ...(options.headers || {}),
+      },
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => '');
+      throw new Error(`Supabase ${options.method || 'GET'} ${path} failed: ${res.status} ${body}`);
+    }
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
+  }
+
+  function showBanner(message) {
+    bannerSlot.innerHTML = '';
+    const div = document.createElement('div');
+    div.className = 'banner';
+    div.textContent = message;
+    bannerSlot.appendChild(div);
+  }
+
+  function clearBanner() {
+    bannerSlot.innerHTML = '';
+  }
+
+  // --- Load --------------------------------------------------------------
+  async function loadAll() {
+    try {
+      const [todos, settings] = await Promise.all([
+        sb('todos?select=*&order=created_at.asc'),
+        sb('app_settings?key=eq.hideCompleted&select=value'),
+      ]);
+      items = todos || [];
+      hideCompleted = !!(settings && settings[0] && settings[0].value === true);
+      hideCompletedToggle.checked = hideCompleted;
+      clearBanner();
+      render();
+    } catch (e) {
+      console.error('Load failed:', e);
+      board.className = 'fatal';
+      board.textContent = "Couldn't load your list from Supabase. Double check the table names and API key match what was set up.";
+      addBtn.disabled = true;
+    }
+  }
+
+  // --- Mutations -----------------------------------------------------
+  async function addItem() {
+    const text = newItemText.value.trim();
+    if (!text) return;
+    const cat = newItemCat.value;
+    newItemText.value = '';
+    try {
+      const [created] = await sb('todos', {
+        method: 'POST',
+        headers: { 'Prefer': 'return=representation' },
+        body: JSON.stringify({ text, category: cat, done: false }),
+      });
+      items.push(created);
+      clearBanner();
+      render();
+    } catch (e) {
+      console.error('Add failed:', e);
+      showBanner("Couldn't save that item. Try again in a moment.");
+    }
+  }
+
+  async function toggleDone(id) {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    const newDone = !item.done;
+    item.done = newDone; // optimistic
+    pendingIds.add(id);
+    render();
+    try {
+      await sb(`todos?id=eq.${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ done: newDone }),
+      });
+      clearBanner();
+    } catch (e) {
+      console.error('Update failed:', e);
+      item.done = !newDone; // revert
+      showBanner("Couldn't save that change. Try again.");
+    } finally {
+      pendingIds.delete(id);
+      render();
+    }
+  }
+
+  async function deleteItem(id) {
+    const idx = items.findIndex(i => i.id === id);
+    if (idx === -1) return;
+    const removed = items[idx];
+    items.splice(idx, 1);
+    render();
+    try {
+      await sb(`todos?id=eq.${id}`, { method: 'DELETE' });
+      clearBanner();
+    } catch (e) {
+      console.error('Delete failed:', e);
+      items.splice(idx, 0, removed); // restore
+      showBanner("Couldn't delete that item. Try again.");
+      render();
+    }
+  }
+
+  async function saveHideCompleted() {
+    try {
+      await sb('app_settings', {
+        method: 'POST',
+        headers: { 'Prefer': 'resolution=merge-duplicates' },
+        body: JSON.stringify({ key: 'hideCompleted', value: hideCompleted }),
+      });
+      clearBanner();
+    } catch (e) {
+      console.error('Saving toggle failed:', e);
+      showBanner("Couldn't save that preference, but it'll still work for this visit.");
+    }
+  }
+
+  // --- Render --------------------------------------------------------
+  function render() {
+    board.className = '';
+    board.innerHTML = '';
+    CATEGORIES.forEach(cat => {
+      const allCatItems = items.filter(i => i.category === cat.id);
+      const catItems = hideCompleted ? allCatItems.filter(i => !i.done) : allCatItems;
+      const section = document.createElement('div');
+      section.className = 'category';
+
+      const label = document.createElement('div');
+      label.className = 'cat-label';
+      label.innerHTML = `<span class="dot" style="background:${cat.color}"></span>${cat.label}`;
+      section.appendChild(label);
+
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      if (catItems.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-cat';
+        empty.textContent = allCatItems.length === 0 ? 'Nothing here yet.' : 'All done here.';
+        card.appendChild(empty);
+      } else {
+        catItems.forEach(item => {
+          const row = document.createElement('div');
+          row.className = 'item' + (item.done ? ' done' : '') + (pendingIds.has(item.id) ? ' pending' : '');
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.checked = item.done;
+          checkbox.addEventListener('change', () => toggleDone(item.id));
+
+          const text = document.createElement('div');
+          text.className = 'item-text';
+          text.textContent = item.text;
+
+          const del = document.createElement('button');
+          del.className = 'del-btn';
+          del.textContent = '✕';
+          del.addEventListener('click', () => deleteItem(item.id));
+
+          row.appendChild(checkbox);
+          row.appendChild(text);
+          row.appendChild(del);
+          card.appendChild(row);
+        });
+      }
+
+      section.appendChild(card);
+      board.appendChild(section);
+    });
+  }
+
+  addBtn.addEventListener('click', addItem);
+  newItemText.addEventListener('keydown', (e) => { if (e.key === 'Enter') addItem(); });
+  hideCompletedToggle.addEventListener('change', () => {
+    hideCompleted = hideCompletedToggle.checked;
+    render();
+    saveHideCompleted();
+  });
+
+  loadAll();
+</script>
+</body>
+</html>
