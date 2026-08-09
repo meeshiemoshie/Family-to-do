@@ -15,6 +15,12 @@
     --household: #6E8FA8;
     --dog: #B08968;
     --muted: #9A9284;
+    --mike: #3E6B8A;
+    --meesh: #A85D72;
+    --shared: #6B7F5E;
+    --overdue: #8C2F22;
+    --soon: #C98A2C;
+    --action: #8A5A3E;
   }
   * { box-sizing: border-box; }
   body {
@@ -28,7 +34,7 @@
     padding: 20px 14px 60px;
   }
   .wrap { max-width: 640px; margin: 0 auto; }
-  header { margin-bottom: 20px; }
+  header { margin-bottom: 16px; }
   h1 {
     font-family: 'Poppins', sans-serif;
     font-size: 1.5rem;
@@ -36,107 +42,97 @@
     letter-spacing: -0.01em;
   }
   .sub { font-size: 0.85rem; color: var(--muted); }
-  .add-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-  .add-row input[type="text"] {
-    flex: 1 1 180px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1.5px solid #E2DACB;
-    font-size: 0.95rem;
-    font-family: inherit;
-    background: #fff;
+
+  .banner {
+    background: #FBEAE3; color: #8A3B24; border: 1px solid #E37B5D;
+    border-radius: 10px; padding: 8px 12px; font-size: 0.8rem; margin-bottom: 14px;
   }
-  .add-row select {
-    padding: 10px 10px;
-    border-radius: 10px;
-    border: 1.5px solid #E2DACB;
-    font-family: inherit;
-    font-size: 0.9rem;
-    background: #fff;
+
+  .group-toggle {
+    display: flex; gap: 4px; background: #F2EDE2; border-radius: 10px;
+    padding: 4px; margin-bottom: 14px; width: fit-content;
   }
-  .add-row button {
-    padding: 10px 16px;
-    border-radius: 10px;
-    border: none;
-    background: var(--ink);
-    color: var(--paper);
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
+  .group-toggle button {
+    border: none; background: transparent; padding: 6px 14px; border-radius: 8px;
+    font-size: 0.82rem; font-weight: 600; font-family: inherit; color: var(--muted); cursor: pointer;
   }
-  .add-row button:disabled { opacity: 0.5; }
-  .add-row button:active { transform: scale(0.97); }
+  .group-toggle button.active { background: var(--ink); color: var(--paper); }
+
+  .add-toggle-btn {
+    display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-radius: 10px;
+    border: none; background: var(--ink); color: var(--paper); font-weight: 600;
+    font-size: 0.9rem; cursor: pointer; margin-bottom: 14px;
+  }
+
+  .add-panel {
+    background: #fff; border: 1px solid #E2DACB; border-radius: 12px;
+    padding: 14px; margin-bottom: 16px;
+  }
+  .add-panel input[type="text"], .add-panel textarea, .add-panel select, .add-panel input[type="number"], .add-panel input[type="date"] {
+    width: 100%; padding: 9px 10px; border-radius: 8px; border: 1.5px solid #E2DACB;
+    font-size: 0.9rem; font-family: inherit; background: #fff; margin-bottom: 8px;
+  }
+  .add-panel textarea { min-height: 60px; resize: vertical; }
+  .add-row-inline { display: flex; gap: 8px; }
+  .add-row-inline > * { flex: 1; }
+  .field-label { font-size: 0.75rem; color: var(--muted); margin: 4px 0 3px; font-weight: 600; }
+  .add-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; }
+  .btn-primary {
+    padding: 8px 16px; border-radius: 8px; border: none; background: var(--ink);
+    color: var(--paper); font-weight: 600; font-size: 0.85rem; cursor: pointer;
+  }
+  .btn-ghost {
+    padding: 8px 14px; border-radius: 8px; border: none; background: transparent;
+    color: var(--muted); font-size: 0.85rem; cursor: pointer;
+  }
+
   .hide-toggle {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.85rem;
-    color: var(--muted);
-    margin-bottom: 16px;
-    cursor: pointer;
-    user-select: none;
+    display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--muted);
+    margin-bottom: 16px; cursor: pointer; user-select: none;
   }
   .hide-toggle input { accent-color: var(--ink); width: 15px; height: 15px; }
+
   .category { margin-bottom: 22px; }
   .cat-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 20px;
-    margin-bottom: 10px;
-    background: #F2EDE2;
+    display: inline-flex; align-items: center; gap: 6px; font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem; font-weight: 600; padding: 4px 10px; border-radius: 20px;
+    margin-bottom: 10px; background: #F2EDE2;
   }
   .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-  .card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 4px 6px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    border: 1px solid #EFE9DC;
-  }
-  .item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 10px 8px;
-    border-bottom: 1px solid #F2EDE2;
-  }
+
+  .card { background: #fff; border-radius: 12px; padding: 4px 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #EFE9DC; }
+  .item { padding: 10px 8px; border-bottom: 1px solid #F2EDE2; }
   .item:last-child { border-bottom: none; }
-  .item input[type="checkbox"] {
-    margin-top: 2px;
-    width: 18px;
-    height: 18px;
-    accent-color: var(--ink);
-    flex-shrink: 0;
-  }
+  .item-top { display: flex; align-items: flex-start; gap: 10px; }
+  .item input[type="checkbox"] { margin-top: 2px; width: 18px; height: 18px; accent-color: var(--ink); flex-shrink: 0; }
   .item-text { flex: 1; font-size: 0.95rem; line-height: 1.35; }
   .item.done .item-text { text-decoration: line-through; color: var(--muted); }
   .item.pending { opacity: 0.5; }
-  .del-btn {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 1.1rem;
-    cursor: pointer;
-    padding: 0 4px;
-    line-height: 1;
+  .del-btn { background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; padding: 0 4px; line-height: 1; }
+
+  .meta-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .badge { font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 10px; color: #fff; white-space: nowrap; }
+  .badge-outline { font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 10px; border: 1px solid currentColor; white-space: nowrap; }
+
+  .type-actions { display: flex; align-items: center; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+  .btn-sm {
+    padding: 5px 10px; border-radius: 7px; border: none; font-size: 0.75rem; font-weight: 600;
+    cursor: pointer; color: #fff; background: var(--shared); display: inline-flex; align-items: center; gap: 4px;
   }
+  .btn-sm.reopen { background: transparent; color: var(--muted); border: 1px solid #E2DACB; }
+  .date-input-sm { padding: 5px 8px; border-radius: 7px; border: 1px solid #E2DACB; font-size: 0.75rem; font-family: inherit; }
+
+  .progress-bar { height: 5px; background: #F2EDE2; border-radius: 3px; overflow: hidden; margin-top: 6px; }
+  .progress-fill { height: 100%; background: var(--shared); }
+  .subtasks { margin-top: 6px; padding-left: 2px; }
+  .subtask { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--ink); padding: 3px 0; }
+  .subtask input { width: 14px; height: 14px; accent-color: var(--ink); }
+  .subtask.done { color: var(--muted); text-decoration: line-through; }
+  .expand-btn { background: none; border: none; color: var(--muted); font-size: 0.75rem; cursor: pointer; padding: 4px 0; }
+
   .empty-cat { font-size: 0.85rem; color: var(--muted); padding: 10px 8px; font-style: italic; }
   .loading, .fatal { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 0.9rem; }
   .fatal { color: #8A3B24; }
-  .banner {
-    background: #FBEAE3;
-    color: #8A3B24;
-    border: 1px solid #E37B5D;
-    border-radius: 10px;
-    padding: 8px 12px;
-    font-size: 0.8rem;
-    margin-bottom: 14px;
-  }
 </style>
 </head>
 <body>
@@ -148,10 +144,46 @@
 
   <div id="banner-slot"></div>
 
-  <div class="add-row">
-    <input type="text" id="newItemText" placeholder="Add a to-do..." />
-    <select id="newItemCat"></select>
-    <button id="addBtn">Add</button>
+  <div class="group-toggle" id="groupToggle">
+    <button data-group="category" class="active">By Area</button>
+    <button data-group="assignee">By Person</button>
+  </div>
+
+  <button class="add-toggle-btn" id="addToggleBtn">+ Add task</button>
+
+  <div class="add-panel" id="addPanel" style="display:none;">
+    <input type="text" id="newItemText" placeholder="Task title" />
+    <div class="add-row-inline">
+      <div>
+        <div class="field-label">Area</div>
+        <select id="newItemCat"></select>
+      </div>
+      <div>
+        <div class="field-label">Owner</div>
+        <select id="newItemAssignee"></select>
+      </div>
+    </div>
+    <div class="field-label">Type</div>
+    <select id="newItemType">
+      <option value="simple">Simple to-do</option>
+      <option value="recurring">Recurring chore</option>
+      <option value="project">Project (with steps)</option>
+      <option value="appointment">Appointment</option>
+    </select>
+
+    <div id="typeExtra-recurring" style="display:none;">
+      <div class="field-label">Repeats every (days)</div>
+      <input type="number" id="newItemInterval" min="1" value="7" />
+    </div>
+    <div id="typeExtra-project" style="display:none;">
+      <div class="field-label">Steps (one per line)</div>
+      <textarea id="newItemSubtasks" placeholder="Measure windows&#10;Order supplies&#10;Install"></textarea>
+    </div>
+
+    <div class="add-actions">
+      <button class="btn-ghost" id="cancelAddBtn">Cancel</button>
+      <button class="btn-primary" id="addBtn">Add</button>
+    </div>
   </div>
 
   <label class="hide-toggle">
@@ -174,36 +206,73 @@
     { id: 'dog', label: 'Dog & Pet Care', color: 'var(--dog)' },
   ];
 
+  const ASSIGNEES = [
+    { id: 'Mike', label: 'Mike', color: 'var(--mike)' },
+    { id: 'Meesh', label: 'Meesh', color: 'var(--meesh)' },
+    { id: 'Shared', label: 'Shared', color: 'var(--shared)' },
+  ];
+
   let items = [];
   let hideCompleted = false;
+  let groupBy = 'category';
+  let expandedIds = new Set();
   let pendingIds = new Set();
+  const apptDateDrafts = {};
 
   const board = document.getElementById('board');
   const bannerSlot = document.getElementById('banner-slot');
   const newItemText = document.getElementById('newItemText');
   const newItemCat = document.getElementById('newItemCat');
+  const newItemAssignee = document.getElementById('newItemAssignee');
+  const newItemType = document.getElementById('newItemType');
+  const newItemInterval = document.getElementById('newItemInterval');
+  const newItemSubtasks = document.getElementById('newItemSubtasks');
   const addBtn = document.getElementById('addBtn');
+  const cancelAddBtn = document.getElementById('cancelAddBtn');
+  const addToggleBtn = document.getElementById('addToggleBtn');
+  const addPanel = document.getElementById('addPanel');
   const hideCompletedToggle = document.getElementById('hideCompletedToggle');
+  const groupToggle = document.getElementById('groupToggle');
 
   CATEGORIES.forEach(c => {
     const opt = document.createElement('option');
-    opt.value = c.id;
-    opt.textContent = c.label;
+    opt.value = c.id; opt.textContent = c.label;
     newItemCat.appendChild(opt);
   });
+  ASSIGNEES.forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = a.id; opt.textContent = a.label;
+    newItemAssignee.appendChild(opt);
+  });
 
-  // --- Supabase REST helper -------------------------------------------
-  // Only the apikey header is sent. Newer sb_publishable_/sb_secret_ keys
-  // are not JWTs, so putting them in Authorization: Bearer gets rejected
-  // unless it exactly duplicates apikey - simplest to just omit it.
+  function catMeta(id) { return CATEGORIES.find(c => c.id === id) || CATEGORIES[0]; }
+  function assigneeMeta(id) { return ASSIGNEES.find(a => a.id === id) || ASSIGNEES[2]; }
+
+  function todayISO() {
+    const d = new Date(); d.setHours(0,0,0,0);
+    return d.toISOString().slice(0,10);
+  }
+  function addDaysISO(iso, n) {
+    const d = new Date(iso + 'T00:00:00');
+    d.setDate(d.getDate() + n);
+    return d.toISOString().slice(0,10);
+  }
+  function fmtDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+  function diffDaysFromToday(iso) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const d = new Date(iso + 'T00:00:00');
+    return Math.round((d - today) / 86400000);
+  }
+
+  // --- Supabase REST helper ---
   async function sb(path, options = {}) {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
       ...options,
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Content-Type': 'application/json',
-        ...(options.headers || {}),
-      },
+      headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json', ...(options.headers || {}) },
     });
     if (!res.ok) {
       const body = await res.text().catch(() => '');
@@ -216,48 +285,104 @@
   function showBanner(message) {
     bannerSlot.innerHTML = '';
     const div = document.createElement('div');
-    div.className = 'banner';
-    div.textContent = message;
+    div.className = 'banner'; div.textContent = message;
     bannerSlot.appendChild(div);
   }
+  function clearBanner() { bannerSlot.innerHTML = ''; }
 
-  function clearBanner() {
-    bannerSlot.innerHTML = '';
-  }
-
-  // --- Load --------------------------------------------------------------
+  // --- Load ---
   async function loadAll() {
     try {
       const [todos, settings] = await Promise.all([
         sb('todos?select=*&order=created_at.asc'),
-        sb('app_settings?key=eq.hideCompleted&select=value'),
+        sb('app_settings?select=key,value'),
       ]);
       items = todos || [];
-      hideCompleted = !!(settings && settings[0] && settings[0].value === true);
+      const hideRow = (settings || []).find(s => s.key === 'hideCompleted');
+      const groupRow = (settings || []).find(s => s.key === 'groupBy');
+      hideCompleted = !!(hideRow && hideRow.value === true);
+      groupBy = (groupRow && (groupRow.value === 'assignee' || groupRow.value === 'category')) ? groupRow.value : 'category';
       hideCompletedToggle.checked = hideCompleted;
+      updateGroupToggleUI();
       clearBanner();
       render();
     } catch (e) {
       console.error('Load failed:', e);
       board.className = 'fatal';
-      board.textContent = "Couldn't load your list from Supabase. Double check the table names and API key match what was set up.";
-      addBtn.disabled = true;
+      board.textContent = "Couldn't load your list from Supabase. Double check the table columns match what was set up.";
+      addToggleBtn.disabled = true;
     }
   }
 
-  // --- Mutations -----------------------------------------------------
+  function isDone(item) {
+    if (item.task_type === 'project') {
+      const st = item.subtasks || [];
+      return st.length > 0 && st.every(s => s.done);
+    }
+    if (item.task_type === 'recurring') return false;
+    return !!item.done;
+  }
+
+  function dueBadge(item) {
+    if (item.task_type === 'recurring' && item.next_due) {
+      const diff = diffDaysFromToday(item.next_due);
+      if (diff < 0) return { text: 'Overdue', color: 'var(--overdue)' };
+      if (diff === 0) return { text: 'Due today', color: 'var(--overdue)' };
+      if (diff <= 7) return { text: `in ${diff}d`, color: 'var(--soon)' };
+      return { text: `every ${item.interval_days}d`, color: 'var(--muted)' };
+    }
+    if (item.task_type === 'appointment') {
+      if (item.appt_state === 'needsScheduling') return { text: 'Needs a date', color: 'var(--action)' };
+      if (item.appt_state === 'booked' && item.due_date) {
+        const diff = diffDaysFromToday(item.due_date);
+        if (diff < 0) return { text: 'Overdue', color: 'var(--overdue)' };
+        if (diff === 0) return { text: 'Today', color: 'var(--overdue)' };
+        if (diff <= 7) return { text: `in ${diff}d`, color: 'var(--soon)' };
+        return { text: fmtDate(item.due_date), color: 'var(--muted)' };
+      }
+    }
+    return null;
+  }
+
+  // --- Mutations ---
+  function resetAddPanel() {
+    newItemText.value = '';
+    newItemType.value = 'simple';
+    newItemInterval.value = 7;
+    newItemSubtasks.value = '';
+    document.getElementById('typeExtra-recurring').style.display = 'none';
+    document.getElementById('typeExtra-project').style.display = 'none';
+  }
+
   async function addItem() {
     const text = newItemText.value.trim();
     if (!text) return;
-    const cat = newItemCat.value;
-    newItemText.value = '';
+    const category = newItemCat.value;
+    const assignee = newItemAssignee.value;
+    const task_type = newItemType.value;
+    const payload = { text, category, assignee, task_type };
+
+    if (task_type === 'recurring') {
+      payload.interval_days = Number(newItemInterval.value) || 7;
+      payload.next_due = todayISO();
+    } else if (task_type === 'project') {
+      const subtasks = newItemSubtasks.value.split('\n').map(s => s.trim()).filter(Boolean)
+        .map((title, i) => ({ id: 'st-' + Date.now() + '-' + i, title, done: false }));
+      payload.subtasks = subtasks;
+    } else if (task_type === 'appointment') {
+      payload.appt_state = 'needsScheduling';
+      payload.done = false;
+    } else {
+      payload.done = false;
+    }
+
     try {
       const [created] = await sb('todos', {
-        method: 'POST',
-        headers: { 'Prefer': 'return=representation' },
-        body: JSON.stringify({ text, category: cat, done: false }),
+        method: 'POST', headers: { 'Prefer': 'return=representation' }, body: JSON.stringify(payload),
       });
       items.push(created);
+      resetAddPanel();
+      addPanel.style.display = 'none';
       clearBanner();
       render();
     } catch (e) {
@@ -266,27 +391,69 @@
     }
   }
 
-  async function toggleDone(id) {
-    const item = items.find(i => i.id === id);
-    if (!item) return;
-    const newDone = !item.done;
-    item.done = newDone; // optimistic
-    pendingIds.add(id);
-    render();
+  async function patchItem(id, patch, revert) {
+    pendingIds.add(id); render();
     try {
-      await sb(`todos?id=eq.${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ done: newDone }),
-      });
+      await sb(`todos?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify(patch) });
       clearBanner();
     } catch (e) {
       console.error('Update failed:', e);
-      item.done = !newDone; // revert
+      const item = items.find(i => i.id === id);
+      if (item && revert) Object.assign(item, revert);
       showBanner("Couldn't save that change. Try again.");
     } finally {
-      pendingIds.delete(id);
-      render();
+      pendingIds.delete(id); render();
     }
+  }
+
+  function toggleDone(id) {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    const prev = { done: item.done };
+    item.done = !item.done;
+    patchItem(id, { done: item.done }, prev);
+  }
+
+  function completeRecurring(id) {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    const prev = { next_due: item.next_due };
+    item.next_due = addDaysISO(item.next_due, item.interval_days);
+    patchItem(id, { next_due: item.next_due }, prev);
+  }
+
+  function confirmApptDate(id) {
+    const date = apptDateDrafts[id];
+    if (!date) return;
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    const prev = { appt_state: item.appt_state, due_date: item.due_date };
+    item.appt_state = 'booked'; item.due_date = date;
+    patchItem(id, { appt_state: 'booked', due_date: date }, prev);
+  }
+
+  function markAttended(id) {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    const prev = { done: item.done };
+    item.done = true;
+    patchItem(id, { done: true }, prev);
+  }
+
+  function reopenAppt(id) {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    const prev = { done: item.done };
+    item.done = false;
+    patchItem(id, { done: false }, prev);
+  }
+
+  function toggleSubtask(itemId, subId) {
+    const item = items.find(i => i.id === itemId);
+    if (!item) return;
+    const prevSubtasks = item.subtasks.map(s => ({ ...s }));
+    item.subtasks = item.subtasks.map(s => s.id === subId ? { ...s, done: !s.done } : s);
+    patchItem(itemId, { subtasks: item.subtasks }, { subtasks: prevSubtasks });
   }
 
   async function deleteItem(id) {
@@ -300,73 +467,217 @@
       clearBanner();
     } catch (e) {
       console.error('Delete failed:', e);
-      items.splice(idx, 0, removed); // restore
+      items.splice(idx, 0, removed);
       showBanner("Couldn't delete that item. Try again.");
       render();
     }
   }
 
-  async function saveHideCompleted() {
+  async function saveSetting(key, value) {
     try {
       await sb('app_settings', {
-        method: 'POST',
-        headers: { 'Prefer': 'resolution=merge-duplicates' },
-        body: JSON.stringify({ key: 'hideCompleted', value: hideCompleted }),
+        method: 'POST', headers: { 'Prefer': 'resolution=merge-duplicates' },
+        body: JSON.stringify({ key, value }),
       });
       clearBanner();
     } catch (e) {
-      console.error('Saving toggle failed:', e);
+      console.error('Saving setting failed:', e);
       showBanner("Couldn't save that preference, but it'll still work for this visit.");
     }
   }
 
-  // --- Render --------------------------------------------------------
+  function updateGroupToggleUI() {
+    [...groupToggle.querySelectorAll('button')].forEach(b => {
+      b.classList.toggle('active', b.dataset.group === groupBy);
+    });
+  }
+
+  // --- Render ---
+  function renderItemActions(item) {
+    const wrap = document.createElement('div');
+    wrap.className = 'type-actions';
+    const done = isDone(item);
+
+    if (item.task_type === 'recurring') {
+      const btn = document.createElement('button');
+      btn.className = 'btn-sm';
+      btn.textContent = 'Done this cycle';
+      btn.addEventListener('click', () => completeRecurring(item.id));
+      wrap.appendChild(btn);
+    } else if (item.task_type === 'appointment' && item.appt_state === 'needsScheduling') {
+      const dateInput = document.createElement('input');
+      dateInput.type = 'date';
+      dateInput.className = 'date-input-sm';
+      dateInput.value = apptDateDrafts[item.id] || '';
+      dateInput.addEventListener('change', (e) => { apptDateDrafts[item.id] = e.target.value; });
+      const btn = document.createElement('button');
+      btn.className = 'btn-sm';
+      btn.textContent = 'Confirm';
+      btn.addEventListener('click', () => confirmApptDate(item.id));
+      wrap.appendChild(dateInput);
+      wrap.appendChild(btn);
+    } else if (item.task_type === 'appointment' && item.appt_state === 'booked' && !done) {
+      const btn = document.createElement('button');
+      btn.className = 'btn-sm';
+      btn.textContent = 'Mark attended';
+      btn.addEventListener('click', () => markAttended(item.id));
+      wrap.appendChild(btn);
+    } else if (item.task_type === 'appointment' && done) {
+      const btn = document.createElement('button');
+      btn.className = 'btn-sm reopen';
+      btn.textContent = 'Reopen';
+      btn.addEventListener('click', () => reopenAppt(item.id));
+      wrap.appendChild(btn);
+    }
+    return wrap.children.length ? wrap : null;
+  }
+
+  function renderItem(item) {
+    const done = isDone(item);
+    const cat = catMeta(item.category);
+    const assignee = assigneeMeta(item.assignee);
+    const badge = dueBadge(item);
+
+    const row = document.createElement('div');
+    row.className = 'item' + (done ? ' done' : '') + (pendingIds.has(item.id) ? ' pending' : '');
+
+    const top = document.createElement('div');
+    top.className = 'item-top';
+
+    if (item.task_type === 'simple' || item.task_type === 'appointment') {
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = done;
+      checkbox.disabled = item.task_type === 'appointment';
+      if (item.task_type === 'simple') checkbox.addEventListener('change', () => toggleDone(item.id));
+      top.appendChild(checkbox);
+    } else {
+      const spacer = document.createElement('div');
+      spacer.style.width = '18px'; spacer.style.flexShrink = '0';
+      top.appendChild(spacer);
+    }
+
+    const mid = document.createElement('div');
+    mid.style.flex = '1'; mid.style.minWidth = '0';
+
+    const text = document.createElement('div');
+    text.className = 'item-text';
+    text.textContent = item.text;
+    mid.appendChild(text);
+
+    const metaRow = document.createElement('div');
+    metaRow.className = 'meta-row';
+    const assigneeBadge = document.createElement('span');
+    assigneeBadge.className = 'badge';
+    assigneeBadge.style.background = assignee.color;
+    assigneeBadge.textContent = assignee.label;
+    metaRow.appendChild(assigneeBadge);
+    if (groupBy === 'assignee') {
+      const catBadge = document.createElement('span');
+      catBadge.className = 'badge-outline';
+      catBadge.style.color = cat.color;
+      catBadge.textContent = cat.label;
+      metaRow.appendChild(catBadge);
+    }
+    if (badge) {
+      const b = document.createElement('span');
+      b.className = 'badge-outline';
+      b.style.color = badge.color;
+      b.textContent = badge.text;
+      metaRow.appendChild(b);
+    }
+    if (item.task_type === 'project' && item.subtasks && item.subtasks.length) {
+      const doneCt = item.subtasks.filter(s => s.done).length;
+      const stepsBadge = document.createElement('span');
+      stepsBadge.className = 'badge-outline';
+      stepsBadge.style.color = 'var(--muted)';
+      stepsBadge.textContent = `${doneCt}/${item.subtasks.length} steps`;
+      metaRow.appendChild(stepsBadge);
+    }
+    mid.appendChild(metaRow);
+
+    if (item.task_type === 'project' && item.subtasks && item.subtasks.length) {
+      const doneCt = item.subtasks.filter(s => s.done).length;
+      const bar = document.createElement('div');
+      bar.className = 'progress-bar';
+      const fill = document.createElement('div');
+      fill.className = 'progress-fill';
+      fill.style.width = `${(doneCt / item.subtasks.length) * 100}%`;
+      bar.appendChild(fill);
+      mid.appendChild(bar);
+
+      const expandBtn = document.createElement('button');
+      expandBtn.className = 'expand-btn';
+      const isExpanded = expandedIds.has(item.id);
+      expandBtn.textContent = isExpanded ? 'Hide steps' : 'Show steps';
+      expandBtn.addEventListener('click', () => {
+        if (isExpanded) expandedIds.delete(item.id); else expandedIds.add(item.id);
+        render();
+      });
+      mid.appendChild(expandBtn);
+
+      if (isExpanded) {
+        const stWrap = document.createElement('div');
+        stWrap.className = 'subtasks';
+        item.subtasks.forEach(s => {
+          const stRow = document.createElement('label');
+          stRow.className = 'subtask' + (s.done ? ' done' : '');
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.checked = s.done;
+          cb.addEventListener('change', () => toggleSubtask(item.id, s.id));
+          const label = document.createElement('span');
+          label.textContent = s.title;
+          stRow.appendChild(cb); stRow.appendChild(label);
+          stWrap.appendChild(stRow);
+        });
+        mid.appendChild(stWrap);
+      }
+    }
+
+    const actions = renderItemActions(item);
+    if (actions) mid.appendChild(actions);
+
+    top.appendChild(mid);
+
+    const del = document.createElement('button');
+    del.className = 'del-btn';
+    del.textContent = '✕';
+    del.addEventListener('click', () => deleteItem(item.id));
+    top.appendChild(del);
+
+    row.appendChild(top);
+    return row;
+  }
+
   function render() {
     board.className = '';
     board.innerHTML = '';
-    CATEGORIES.forEach(cat => {
-      const allCatItems = items.filter(i => i.category === cat.id);
-      const catItems = hideCompleted ? allCatItems.filter(i => !i.done) : allCatItems;
+
+    const groups = groupBy === 'assignee' ? ASSIGNEES : CATEGORIES;
+    const groupKeyOf = (item) => groupBy === 'assignee' ? item.assignee : item.category;
+
+    groups.forEach(g => {
+      const allGroupItems = items.filter(i => groupKeyOf(i) === g.id);
+      const groupItems = hideCompleted ? allGroupItems.filter(i => !isDone(i)) : allGroupItems;
       const section = document.createElement('div');
       section.className = 'category';
 
       const label = document.createElement('div');
       label.className = 'cat-label';
-      label.innerHTML = `<span class="dot" style="background:${cat.color}"></span>${cat.label}`;
+      label.innerHTML = `<span class="dot" style="background:${g.color}"></span>${g.label}`;
       section.appendChild(label);
 
       const card = document.createElement('div');
       card.className = 'card';
 
-      if (catItems.length === 0) {
+      if (groupItems.length === 0) {
         const empty = document.createElement('div');
         empty.className = 'empty-cat';
-        empty.textContent = allCatItems.length === 0 ? 'Nothing here yet.' : 'All done here.';
+        empty.textContent = allGroupItems.length === 0 ? 'Nothing here yet.' : 'All done here.';
         card.appendChild(empty);
       } else {
-        catItems.forEach(item => {
-          const row = document.createElement('div');
-          row.className = 'item' + (item.done ? ' done' : '') + (pendingIds.has(item.id) ? ' pending' : '');
-
-          const checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.checked = item.done;
-          checkbox.addEventListener('change', () => toggleDone(item.id));
-
-          const text = document.createElement('div');
-          text.className = 'item-text';
-          text.textContent = item.text;
-
-          const del = document.createElement('button');
-          del.className = 'del-btn';
-          del.textContent = '✕';
-          del.addEventListener('click', () => deleteItem(item.id));
-
-          row.appendChild(checkbox);
-          row.appendChild(text);
-          row.appendChild(del);
-          card.appendChild(row);
-        });
+        groupItems.forEach(item => card.appendChild(renderItem(item)));
       }
 
       section.appendChild(card);
@@ -374,12 +685,31 @@
     });
   }
 
+  // --- Wiring ---
+  addToggleBtn.addEventListener('click', () => {
+    addPanel.style.display = addPanel.style.display === 'none' ? 'block' : 'none';
+  });
+  cancelAddBtn.addEventListener('click', () => {
+    resetAddPanel();
+    addPanel.style.display = 'none';
+  });
   addBtn.addEventListener('click', addItem);
-  newItemText.addEventListener('keydown', (e) => { if (e.key === 'Enter') addItem(); });
+  newItemType.addEventListener('change', () => {
+    document.getElementById('typeExtra-recurring').style.display = newItemType.value === 'recurring' ? 'block' : 'none';
+    document.getElementById('typeExtra-project').style.display = newItemType.value === 'project' ? 'block' : 'none';
+  });
   hideCompletedToggle.addEventListener('change', () => {
     hideCompleted = hideCompletedToggle.checked;
     render();
-    saveHideCompleted();
+    saveSetting('hideCompleted', hideCompleted);
+  });
+  groupToggle.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-group]');
+    if (!btn) return;
+    groupBy = btn.dataset.group;
+    updateGroupToggleUI();
+    render();
+    saveSetting('groupBy', groupBy);
   });
 
   loadAll();
