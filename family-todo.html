@@ -19,8 +19,10 @@
     --meesh: #A85D72;
     --shared: #6B7F5E;
     --overdue: #8C2F22;
+    --today: #D9483A;
     --soon: #C98A2C;
     --action: #8A5A3E;
+    --later: #9C9484;
   }
   * { box-sizing: border-box; }
   body {
@@ -31,81 +33,49 @@
     color: var(--ink);
     font-family: 'Inter', system-ui, sans-serif;
     min-height: 100vh;
-    padding: 20px 14px 60px;
+    padding: 20px 14px 90px;
   }
   .wrap { max-width: 640px; margin: 0 auto; }
   header { margin-bottom: 16px; }
-  h1 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.5rem;
-    margin: 0 0 4px;
-    letter-spacing: -0.01em;
-  }
+  h1 { font-family: 'Poppins', sans-serif; font-size: 1.5rem; margin: 0 0 4px; letter-spacing: -0.01em; }
   .sub { font-size: 0.85rem; color: var(--muted); }
 
-  .banner {
-    background: #FBEAE3; color: #8A3B24; border: 1px solid #E37B5D;
-    border-radius: 10px; padding: 8px 12px; font-size: 0.8rem; margin-bottom: 14px;
-  }
+  .banner { background: #FBEAE3; color: #8A3B24; border: 1px solid #E37B5D; border-radius: 10px; padding: 8px 12px; font-size: 0.8rem; margin-bottom: 14px; }
 
-  .group-toggle {
-    display: flex; gap: 4px; background: #F2EDE2; border-radius: 10px;
-    padding: 4px; margin-bottom: 14px; width: fit-content;
-  }
-  .group-toggle button {
-    border: none; background: transparent; padding: 6px 14px; border-radius: 8px;
-    font-size: 0.82rem; font-weight: 600; font-family: inherit; color: var(--muted); cursor: pointer;
-  }
+  .group-toggle { display: flex; gap: 4px; background: #F2EDE2; border-radius: 10px; padding: 4px; margin-bottom: 14px; width: fit-content; overflow-x: auto; }
+  .group-toggle button { border: none; background: transparent; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; font-family: inherit; color: var(--muted); cursor: pointer; white-space: nowrap; }
   .group-toggle button.active { background: var(--ink); color: var(--paper); }
 
-  .add-toggle-btn {
-    display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-radius: 10px;
-    border: none; background: var(--ink); color: var(--paper); font-weight: 600;
-    font-size: 0.9rem; cursor: pointer; margin-bottom: 14px;
-  }
+  .add-toggle-btn { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-radius: 10px; border: none; background: var(--ink); color: var(--paper); font-weight: 600; font-size: 0.9rem; cursor: pointer; margin-bottom: 14px; }
 
-  .add-panel {
-    background: #fff; border: 1px solid #E2DACB; border-radius: 12px;
-    padding: 14px; margin-bottom: 16px;
-  }
+  .add-panel { background: #fff; border: 1px solid #E2DACB; border-radius: 12px; padding: 14px; margin-bottom: 16px; }
   .add-panel input[type="text"], .add-panel textarea, .add-panel select, .add-panel input[type="number"], .add-panel input[type="date"] {
-    width: 100%; padding: 9px 10px; border-radius: 8px; border: 1.5px solid #E2DACB;
-    font-size: 0.9rem; font-family: inherit; background: #fff; margin-bottom: 8px;
+    width: 100%; padding: 9px 10px; border-radius: 8px; border: 1.5px solid #E2DACB; font-size: 0.9rem; font-family: inherit; background: #fff; margin-bottom: 8px;
   }
   .add-panel textarea { min-height: 60px; resize: vertical; }
   .add-row-inline { display: flex; gap: 8px; }
   .add-row-inline > * { flex: 1; }
   .field-label { font-size: 0.75rem; color: var(--muted); margin: 4px 0 3px; font-weight: 600; }
   .add-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; }
-  .btn-primary {
-    padding: 8px 16px; border-radius: 8px; border: none; background: var(--ink);
-    color: var(--paper); font-weight: 600; font-size: 0.85rem; cursor: pointer;
-  }
-  .btn-ghost {
-    padding: 8px 14px; border-radius: 8px; border: none; background: transparent;
-    color: var(--muted); font-size: 0.85rem; cursor: pointer;
-  }
+  .btn-primary { padding: 8px 16px; border-radius: 8px; border: none; background: var(--ink); color: var(--paper); font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+  .btn-ghost { padding: 8px 14px; border-radius: 8px; border: none; background: transparent; color: var(--muted); font-size: 0.85rem; cursor: pointer; }
 
-  .hide-toggle {
-    display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--muted);
-    margin-bottom: 16px; cursor: pointer; user-select: none;
-  }
+  .hide-toggle { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; cursor: pointer; user-select: none; }
   .hide-toggle input { accent-color: var(--ink); width: 15px; height: 15px; }
 
   .category { margin-bottom: 22px; }
-  .cat-label {
-    display: inline-flex; align-items: center; gap: 6px; font-family: 'Poppins', sans-serif;
-    font-size: 0.85rem; font-weight: 600; padding: 4px 10px; border-radius: 20px;
-    margin-bottom: 10px; background: #F2EDE2;
-  }
+  .cat-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .cat-label { display: inline-flex; align-items: center; gap: 6px; font-family: 'Poppins', sans-serif; font-size: 0.85rem; font-weight: 600; padding: 4px 10px; border-radius: 20px; background: #F2EDE2; }
   .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .quick-add-btn { border: none; background: #F2EDE2; color: var(--ink); width: 24px; height: 24px; border-radius: 50%; font-size: 0.95rem; font-weight: 700; cursor: pointer; line-height: 1; }
 
   .card { background: #fff; border-radius: 12px; padding: 4px 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #EFE9DC; }
   .item { padding: 10px 8px; border-bottom: 1px solid #F2EDE2; }
   .item:last-child { border-bottom: none; }
   .item-top { display: flex; align-items: flex-start; gap: 10px; }
   .item input[type="checkbox"] { margin-top: 2px; width: 18px; height: 18px; accent-color: var(--ink); flex-shrink: 0; }
-  .item-text { flex: 1; font-size: 0.95rem; line-height: 1.35; }
+  .item-text { flex: 1; font-size: 0.95rem; line-height: 1.35; cursor: pointer; }
+  .item-text:active { opacity: 0.6; }
   .item.done .item-text { text-decoration: line-through; color: var(--muted); }
   .item.pending { opacity: 0.5; }
   .del-btn { background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; padding: 0 4px; line-height: 1; }
@@ -115,10 +85,7 @@
   .badge-outline { font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 10px; border: 1px solid currentColor; white-space: nowrap; }
 
   .type-actions { display: flex; align-items: center; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
-  .btn-sm {
-    padding: 5px 10px; border-radius: 7px; border: none; font-size: 0.75rem; font-weight: 600;
-    cursor: pointer; color: #fff; background: var(--shared); display: inline-flex; align-items: center; gap: 4px;
-  }
+  .btn-sm { padding: 5px 10px; border-radius: 7px; border: none; font-size: 0.75rem; font-weight: 600; cursor: pointer; color: #fff; background: var(--shared); display: inline-flex; align-items: center; gap: 4px; }
   .btn-sm.reopen { background: transparent; color: var(--muted); border: 1px solid #E2DACB; }
   .date-input-sm { padding: 5px 8px; border-radius: 7px; border: 1px solid #E2DACB; font-size: 0.75rem; font-family: inherit; }
 
@@ -133,13 +100,30 @@
   .empty-cat { font-size: 0.85rem; color: var(--muted); padding: 10px 8px; font-style: italic; }
   .loading, .fatal { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 0.9rem; }
   .fatal { color: #8A3B24; }
+
+  /* Edit form */
+  .edit-form { padding: 2px 0; }
+  .edit-form input[type="text"], .edit-form select, .edit-form input[type="number"], .edit-form input[type="date"], .edit-form textarea {
+    width: 100%; padding: 8px 9px; border-radius: 8px; border: 1.5px solid #E2DACB; font-size: 0.88rem; font-family: inherit; background: #fff; margin-bottom: 7px;
+  }
+  .edit-row { display: flex; gap: 8px; }
+  .edit-row > * { flex: 1; }
+  .edit-subtask-row { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+  .edit-subtask-row input[type="text"] { margin-bottom: 0; }
+  .edit-subtask-row button { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.9rem; }
+  .edit-add-step { font-size: 0.78rem; color: var(--muted); background: none; border: none; cursor: pointer; padding: 3px 0; margin-bottom: 6px; }
+  .edit-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+
+  /* Toast */
+  .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 10px 12px 10px 16px; border-radius: 10px; display: none; align-items: center; gap: 14px; font-size: 0.85rem; box-shadow: 0 4px 14px rgba(0,0,0,0.2); z-index: 50; max-width: calc(100% - 28px); }
+  .toast-undo { background: rgba(255,255,255,0.15); border: none; color: var(--paper); font-weight: 600; padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 0.8rem; white-space: nowrap; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <h1>Family To-Do Board</h1>
-    <div class="sub">Synced to Supabase.</div>
+    <div class="sub">Synced to Supabase. Tap a task to edit it.</div>
   </header>
 
   <div id="banner-slot"></div>
@@ -147,6 +131,7 @@
   <div class="group-toggle" id="groupToggle">
     <button data-group="category" class="active">By Area</button>
     <button data-group="assignee">By Person</button>
+    <button data-group="urgency">By Urgency</button>
   </div>
 
   <button class="add-toggle-btn" id="addToggleBtn">+ Add task</button>
@@ -178,6 +163,12 @@
     <div id="typeExtra-project" style="display:none;">
       <div class="field-label">Steps (one per line)</div>
       <textarea id="newItemSubtasks" placeholder="Measure windows&#10;Order supplies&#10;Install"></textarea>
+      <div class="field-label">Due date (optional)</div>
+      <input type="date" id="newItemDueProject" />
+    </div>
+    <div id="typeExtra-simple">
+      <div class="field-label">Due date (optional)</div>
+      <input type="date" id="newItemDueSimple" />
     </div>
 
     <div class="add-actions">
@@ -194,6 +185,11 @@
   <div id="board" class="loading">Loading your list...</div>
 </div>
 
+<div class="toast" id="toast">
+  <span class="toast-msg"></span>
+  <button class="toast-undo" id="toastUndoBtn">Undo</button>
+</div>
+
 <script>
   const SUPABASE_URL = 'https://rmacrimrvkrenlhekjyc.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_vW1vNsIeR5F4edP2OXtfTg_SyPHK8wa';
@@ -205,11 +201,18 @@
     { id: 'household', label: 'Household', color: 'var(--household)' },
     { id: 'dog', label: 'Dog & Pet Care', color: 'var(--dog)' },
   ];
-
   const ASSIGNEES = [
     { id: 'Mike', label: 'Mike', color: 'var(--mike)' },
     { id: 'Meesh', label: 'Meesh', color: 'var(--meesh)' },
     { id: 'Shared', label: 'Shared', color: 'var(--shared)' },
+  ];
+  const URGENCY_BUCKETS = [
+    { id: 'action', label: 'Needs Scheduling', color: 'var(--action)' },
+    { id: 'overdue', label: 'Overdue', color: 'var(--overdue)' },
+    { id: 'dueToday', label: 'Due Today', color: 'var(--today)' },
+    { id: 'thisWeek', label: 'Due This Week', color: 'var(--soon)' },
+    { id: 'upcoming', label: 'Upcoming', color: 'var(--mike)' },
+    { id: 'someday', label: 'Someday', color: 'var(--later)' },
   ];
 
   let items = [];
@@ -217,7 +220,10 @@
   let groupBy = 'category';
   let expandedIds = new Set();
   let pendingIds = new Set();
+  let editingId = null;
+  let editDraft = null;
   const apptDateDrafts = {};
+  let toastTimer = null;
 
   const board = document.getElementById('board');
   const bannerSlot = document.getElementById('banner-slot');
@@ -227,48 +233,29 @@
   const newItemType = document.getElementById('newItemType');
   const newItemInterval = document.getElementById('newItemInterval');
   const newItemSubtasks = document.getElementById('newItemSubtasks');
+  const newItemDueProject = document.getElementById('newItemDueProject');
+  const newItemDueSimple = document.getElementById('newItemDueSimple');
   const addBtn = document.getElementById('addBtn');
   const cancelAddBtn = document.getElementById('cancelAddBtn');
   const addToggleBtn = document.getElementById('addToggleBtn');
   const addPanel = document.getElementById('addPanel');
   const hideCompletedToggle = document.getElementById('hideCompletedToggle');
   const groupToggle = document.getElementById('groupToggle');
+  const toastEl = document.getElementById('toast');
+  const toastMsgEl = toastEl.querySelector('.toast-msg');
+  const toastUndoBtn = document.getElementById('toastUndoBtn');
 
-  CATEGORIES.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c.id; opt.textContent = c.label;
-    newItemCat.appendChild(opt);
-  });
-  ASSIGNEES.forEach(a => {
-    const opt = document.createElement('option');
-    opt.value = a.id; opt.textContent = a.label;
-    newItemAssignee.appendChild(opt);
-  });
+  CATEGORIES.forEach(c => { const o = document.createElement('option'); o.value = c.id; o.textContent = c.label; newItemCat.appendChild(o); });
+  ASSIGNEES.forEach(a => { const o = document.createElement('option'); o.value = a.id; o.textContent = a.label; newItemAssignee.appendChild(o); });
 
   function catMeta(id) { return CATEGORIES.find(c => c.id === id) || CATEGORIES[0]; }
   function assigneeMeta(id) { return ASSIGNEES.find(a => a.id === id) || ASSIGNEES[2]; }
 
-  function todayISO() {
-    const d = new Date(); d.setHours(0,0,0,0);
-    return d.toISOString().slice(0,10);
-  }
-  function addDaysISO(iso, n) {
-    const d = new Date(iso + 'T00:00:00');
-    d.setDate(d.getDate() + n);
-    return d.toISOString().slice(0,10);
-  }
-  function fmtDate(iso) {
-    if (!iso) return '';
-    const d = new Date(iso + 'T00:00:00');
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  }
-  function diffDaysFromToday(iso) {
-    const today = new Date(); today.setHours(0,0,0,0);
-    const d = new Date(iso + 'T00:00:00');
-    return Math.round((d - today) / 86400000);
-  }
+  function todayISO() { const d = new Date(); d.setHours(0,0,0,0); return d.toISOString().slice(0,10); }
+  function addDaysISO(iso, n) { const d = new Date(iso + 'T00:00:00'); d.setDate(d.getDate() + n); return d.toISOString().slice(0,10); }
+  function fmtDate(iso) { if (!iso) return ''; const d = new Date(iso + 'T00:00:00'); return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
+  function diffDaysFromToday(iso) { const today = new Date(); today.setHours(0,0,0,0); const d = new Date(iso + 'T00:00:00'); return Math.round((d - today) / 86400000); }
 
-  // --- Supabase REST helper ---
   async function sb(path, options = {}) {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
       ...options,
@@ -282,15 +269,19 @@
     return text ? JSON.parse(text) : null;
   }
 
-  function showBanner(message) {
-    bannerSlot.innerHTML = '';
-    const div = document.createElement('div');
-    div.className = 'banner'; div.textContent = message;
-    bannerSlot.appendChild(div);
-  }
+  function showBanner(message) { bannerSlot.innerHTML = ''; const div = document.createElement('div'); div.className = 'banner'; div.textContent = message; bannerSlot.appendChild(div); }
   function clearBanner() { bannerSlot.innerHTML = ''; }
 
-  // --- Load ---
+  function showToast(message, onUndo) {
+    clearTimeout(toastTimer);
+    toastMsgEl.textContent = message;
+    toastUndoBtn.style.display = onUndo ? 'inline-flex' : 'none';
+    toastUndoBtn.onclick = () => { onUndo && onUndo(); hideToast(); };
+    toastEl.style.display = 'flex';
+    toastTimer = setTimeout(hideToast, 6000);
+  }
+  function hideToast() { clearTimeout(toastTimer); toastEl.style.display = 'none'; }
+
   async function loadAll() {
     try {
       const [todos, settings] = await Promise.all([
@@ -301,7 +292,7 @@
       const hideRow = (settings || []).find(s => s.key === 'hideCompleted');
       const groupRow = (settings || []).find(s => s.key === 'groupBy');
       hideCompleted = !!(hideRow && hideRow.value === true);
-      groupBy = (groupRow && (groupRow.value === 'assignee' || groupRow.value === 'category')) ? groupRow.value : 'category';
+      groupBy = (groupRow && ['assignee','category','urgency'].includes(groupRow.value)) ? groupRow.value : 'category';
       hideCompletedToggle.checked = hideCompleted;
       updateGroupToggleUI();
       clearBanner();
@@ -315,43 +306,62 @@
   }
 
   function isDone(item) {
-    if (item.task_type === 'project') {
-      const st = item.subtasks || [];
-      return st.length > 0 && st.every(s => s.done);
-    }
+    if (item.task_type === 'project') { const st = item.subtasks || []; return st.length > 0 && st.every(s => s.done); }
     if (item.task_type === 'recurring') return false;
     return !!item.done;
   }
 
-  function dueBadge(item) {
-    if (item.task_type === 'recurring' && item.next_due) {
-      const diff = diffDaysFromToday(item.next_due);
-      if (diff < 0) return { text: 'Overdue', color: 'var(--overdue)' };
-      if (diff === 0) return { text: 'Due today', color: 'var(--overdue)' };
-      if (diff <= 7) return { text: `in ${diff}d`, color: 'var(--soon)' };
-      return { text: `every ${item.interval_days}d`, color: 'var(--muted)' };
-    }
-    if (item.task_type === 'appointment') {
-      if (item.appt_state === 'needsScheduling') return { text: 'Needs a date', color: 'var(--action)' };
-      if (item.appt_state === 'booked' && item.due_date) {
-        const diff = diffDaysFromToday(item.due_date);
-        if (diff < 0) return { text: 'Overdue', color: 'var(--overdue)' };
-        if (diff === 0) return { text: 'Today', color: 'var(--overdue)' };
-        if (diff <= 7) return { text: `in ${diff}d`, color: 'var(--soon)' };
-        return { text: fmtDate(item.due_date), color: 'var(--muted)' };
-      }
-    }
-    return null;
+  function effectiveDueDate(item) {
+    if (item.task_type === 'recurring') return item.next_due || null;
+    if (item.task_type === 'appointment') return item.appt_state === 'booked' ? (item.due_date || null) : null;
+    return item.due_date || null; // simple, project
   }
 
-  // --- Mutations ---
+  function getUrgency(item) {
+    if (item.task_type === 'appointment' && item.appt_state === 'needsScheduling') return 'action';
+    const due = effectiveDueDate(item);
+    if (!due) return 'someday';
+    const diff = diffDaysFromToday(due);
+    if (diff < 0) return 'overdue';
+    if (diff === 0) return 'dueToday';
+    if (diff <= 7) return 'thisWeek';
+    if (diff <= 30) return 'upcoming';
+    return 'someday';
+  }
+
+  function dueBadge(item) {
+    if (item.task_type === 'appointment' && item.appt_state === 'needsScheduling') return { text: 'Needs a date', color: 'var(--action)' };
+    const due = effectiveDueDate(item);
+    if (!due) {
+      if (item.task_type === 'recurring') return { text: `every ${item.interval_days}d`, color: 'var(--muted)' };
+      return null;
+    }
+    const diff = diffDaysFromToday(due);
+    if (diff < 0) return { text: 'Overdue', color: 'var(--overdue)' };
+    if (diff === 0) return { text: 'Today', color: 'var(--today)' };
+    if (diff <= 7) return { text: `in ${diff}d`, color: 'var(--soon)' };
+    return { text: fmtDate(due), color: 'var(--muted)' };
+  }
+
+  // --- Add ---
   function resetAddPanel() {
     newItemText.value = '';
     newItemType.value = 'simple';
     newItemInterval.value = 7;
     newItemSubtasks.value = '';
+    newItemDueProject.value = '';
+    newItemDueSimple.value = '';
     document.getElementById('typeExtra-recurring').style.display = 'none';
     document.getElementById('typeExtra-project').style.display = 'none';
+    document.getElementById('typeExtra-simple').style.display = 'block';
+  }
+
+  function openAddPanel(presetMode, presetId) {
+    addPanel.style.display = 'block';
+    if (presetMode === 'category') newItemCat.value = presetId;
+    if (presetMode === 'assignee') newItemAssignee.value = presetId;
+    newItemText.focus();
+    addPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   async function addItem() {
@@ -366,20 +376,19 @@
       payload.interval_days = Number(newItemInterval.value) || 7;
       payload.next_due = todayISO();
     } else if (task_type === 'project') {
-      const subtasks = newItemSubtasks.value.split('\n').map(s => s.trim()).filter(Boolean)
+      payload.subtasks = newItemSubtasks.value.split('\n').map(s => s.trim()).filter(Boolean)
         .map((title, i) => ({ id: 'st-' + Date.now() + '-' + i, title, done: false }));
-      payload.subtasks = subtasks;
+      payload.due_date = newItemDueProject.value || null;
     } else if (task_type === 'appointment') {
       payload.appt_state = 'needsScheduling';
       payload.done = false;
     } else {
+      payload.due_date = newItemDueSimple.value || null;
       payload.done = false;
     }
 
     try {
-      const [created] = await sb('todos', {
-        method: 'POST', headers: { 'Prefer': 'return=representation' }, body: JSON.stringify(payload),
-      });
+      const [created] = await sb('todos', { method: 'POST', headers: { 'Prefer': 'return=representation' }, body: JSON.stringify(payload) });
       items.push(created);
       resetAddPanel();
       addPanel.style.display = 'none';
@@ -391,7 +400,8 @@
     }
   }
 
-  async function patchItem(id, patch, revert) {
+  // --- Mutations ---
+  async function patchItem(id, patch, before) {
     pendingIds.add(id); render();
     try {
       await sb(`todos?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify(patch) });
@@ -399,7 +409,7 @@
     } catch (e) {
       console.error('Update failed:', e);
       const item = items.find(i => i.id === id);
-      if (item && revert) Object.assign(item, revert);
+      if (item && before) Object.assign(item, before);
       showBanner("Couldn't save that change. Try again.");
     } finally {
       pendingIds.delete(id); render();
@@ -407,64 +417,53 @@
   }
 
   function toggleDone(id) {
-    const item = items.find(i => i.id === id);
-    if (!item) return;
-    const prev = { done: item.done };
+    const item = items.find(i => i.id === id); if (!item) return;
+    const before = { done: item.done };
     item.done = !item.done;
-    patchItem(id, { done: item.done }, prev);
+    patchItem(id, { done: item.done }, before);
   }
-
   function completeRecurring(id) {
-    const item = items.find(i => i.id === id);
-    if (!item) return;
-    const prev = { next_due: item.next_due };
+    const item = items.find(i => i.id === id); if (!item) return;
+    const before = { next_due: item.next_due };
     item.next_due = addDaysISO(item.next_due, item.interval_days);
-    patchItem(id, { next_due: item.next_due }, prev);
+    patchItem(id, { next_due: item.next_due }, before);
   }
-
   function confirmApptDate(id) {
-    const date = apptDateDrafts[id];
-    if (!date) return;
-    const item = items.find(i => i.id === id);
-    if (!item) return;
-    const prev = { appt_state: item.appt_state, due_date: item.due_date };
+    const date = apptDateDrafts[id]; if (!date) return;
+    const item = items.find(i => i.id === id); if (!item) return;
+    const before = { appt_state: item.appt_state, due_date: item.due_date };
     item.appt_state = 'booked'; item.due_date = date;
-    patchItem(id, { appt_state: 'booked', due_date: date }, prev);
+    patchItem(id, { appt_state: 'booked', due_date: date }, before);
   }
-
   function markAttended(id) {
-    const item = items.find(i => i.id === id);
-    if (!item) return;
-    const prev = { done: item.done };
+    const item = items.find(i => i.id === id); if (!item) return;
+    const before = { done: item.done };
     item.done = true;
-    patchItem(id, { done: true }, prev);
+    patchItem(id, { done: true }, before);
   }
-
   function reopenAppt(id) {
-    const item = items.find(i => i.id === id);
-    if (!item) return;
-    const prev = { done: item.done };
+    const item = items.find(i => i.id === id); if (!item) return;
+    const before = { done: item.done };
     item.done = false;
-    patchItem(id, { done: false }, prev);
+    patchItem(id, { done: false }, before);
   }
-
   function toggleSubtask(itemId, subId) {
-    const item = items.find(i => i.id === itemId);
-    if (!item) return;
-    const prevSubtasks = item.subtasks.map(s => ({ ...s }));
+    const item = items.find(i => i.id === itemId); if (!item) return;
+    const before = { subtasks: item.subtasks.map(s => ({ ...s })) };
     item.subtasks = item.subtasks.map(s => s.id === subId ? { ...s, done: !s.done } : s);
-    patchItem(itemId, { subtasks: item.subtasks }, { subtasks: prevSubtasks });
+    patchItem(itemId, { subtasks: item.subtasks }, before);
   }
 
   async function deleteItem(id) {
     const idx = items.findIndex(i => i.id === id);
     if (idx === -1) return;
-    const removed = items[idx];
+    const removed = { ...items[idx] };
     items.splice(idx, 1);
     render();
     try {
       await sb(`todos?id=eq.${id}`, { method: 'DELETE' });
       clearBanner();
+      showToast(`Deleted "${removed.text}"`, () => undoDelete(removed, idx));
     } catch (e) {
       console.error('Delete failed:', e);
       items.splice(idx, 0, removed);
@@ -473,12 +472,23 @@
     }
   }
 
+  async function undoDelete(removedItem, idx) {
+    try {
+      const payload = { ...removedItem };
+      delete payload.id;
+      const [created] = await sb('todos', { method: 'POST', headers: { 'Prefer': 'return=representation' }, body: JSON.stringify(payload) });
+      items.splice(Math.min(idx, items.length), 0, created);
+      clearBanner();
+      render();
+    } catch (e) {
+      console.error('Undo failed:', e);
+      showBanner("Couldn't undo that delete. You may need to re-add it manually.");
+    }
+  }
+
   async function saveSetting(key, value) {
     try {
-      await sb('app_settings', {
-        method: 'POST', headers: { 'Prefer': 'resolution=merge-duplicates' },
-        body: JSON.stringify({ key, value }),
-      });
+      await sb('app_settings', { method: 'POST', headers: { 'Prefer': 'resolution=merge-duplicates' }, body: JSON.stringify({ key, value }) });
       clearBanner();
     } catch (e) {
       console.error('Saving setting failed:', e);
@@ -487,9 +497,163 @@
   }
 
   function updateGroupToggleUI() {
-    [...groupToggle.querySelectorAll('button')].forEach(b => {
-      b.classList.toggle('active', b.dataset.group === groupBy);
+    [...groupToggle.querySelectorAll('button')].forEach(b => b.classList.toggle('active', b.dataset.group === groupBy));
+  }
+
+  // --- Edit ---
+  function startEdit(item) {
+    editingId = item.id;
+    editDraft = {
+      title: item.text,
+      category: item.category,
+      assignee: item.assignee,
+      interval_days: item.interval_days || 7,
+      due_date: item.due_date || '',
+      appt_state: item.appt_state || 'needsScheduling',
+      subtasks: item.subtasks ? item.subtasks.map(s => ({ ...s })) : [],
+    };
+    render();
+  }
+  function cancelEdit() { editingId = null; editDraft = null; render(); }
+
+  async function saveEdit(id) {
+    const item = items.find(i => i.id === id);
+    if (!item || !editDraft) return;
+    const before = { ...item, subtasks: item.subtasks ? item.subtasks.map(s => ({ ...s })) : item.subtasks };
+    const patch = {
+      text: editDraft.title.trim() || item.text,
+      category: editDraft.category,
+      assignee: editDraft.assignee,
+    };
+    if (item.task_type === 'recurring') {
+      patch.interval_days = Number(editDraft.interval_days) || item.interval_days;
+    } else if (item.task_type === 'project') {
+      patch.subtasks = editDraft.subtasks.filter(s => s.title.trim());
+      patch.due_date = editDraft.due_date || null;
+    } else if (item.task_type === 'appointment') {
+      patch.appt_state = editDraft.appt_state;
+      patch.due_date = editDraft.appt_state === 'booked' ? (editDraft.due_date || null) : null;
+    } else {
+      patch.due_date = editDraft.due_date || null;
+    }
+    Object.assign(item, patch);
+    editingId = null; editDraft = null;
+    render();
+    try {
+      await sb(`todos?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify(patch) });
+      clearBanner();
+    } catch (e) {
+      console.error('Save edit failed:', e);
+      Object.assign(item, before);
+      showBanner("Couldn't save those changes. Try again.");
+      render();
+    }
+  }
+
+  function makeSelect(options, currentValue, onChange) {
+    const sel = document.createElement('select');
+    options.forEach(o => {
+      const opt = document.createElement('option');
+      opt.value = o.id; opt.textContent = o.label;
+      if (o.id === currentValue) opt.selected = true;
+      sel.appendChild(opt);
     });
+    sel.addEventListener('change', (e) => onChange(e.target.value));
+    return sel;
+  }
+
+  function renderEditForm(item) {
+    const wrap = document.createElement('div');
+    wrap.className = 'edit-form';
+
+    const titleInput = document.createElement('input');
+    titleInput.type = 'text';
+    titleInput.value = editDraft.title;
+    titleInput.addEventListener('input', (e) => { editDraft.title = e.target.value; });
+    wrap.appendChild(titleInput);
+
+    const row = document.createElement('div');
+    row.className = 'edit-row';
+    row.appendChild(makeSelect(CATEGORIES, editDraft.category, v => { editDraft.category = v; }));
+    row.appendChild(makeSelect(ASSIGNEES, editDraft.assignee, v => { editDraft.assignee = v; }));
+    wrap.appendChild(row);
+
+    if (item.task_type === 'recurring') {
+      const label = document.createElement('div');
+      label.className = 'field-label'; label.textContent = 'Repeats every (days)';
+      wrap.appendChild(label);
+      const intervalInput = document.createElement('input');
+      intervalInput.type = 'number'; intervalInput.min = 1; intervalInput.value = editDraft.interval_days;
+      intervalInput.addEventListener('input', (e) => { editDraft.interval_days = e.target.value; });
+      wrap.appendChild(intervalInput);
+    } else if (item.task_type === 'project') {
+      const label = document.createElement('div');
+      label.className = 'field-label'; label.textContent = 'Steps';
+      wrap.appendChild(label);
+      editDraft.subtasks.forEach((s, idx) => {
+        const stRow = document.createElement('div');
+        stRow.className = 'edit-subtask-row';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox'; cb.checked = s.done;
+        cb.addEventListener('change', () => { editDraft.subtasks[idx].done = !editDraft.subtasks[idx].done; render(); });
+        const titleIn = document.createElement('input');
+        titleIn.type = 'text'; titleIn.value = s.title;
+        titleIn.addEventListener('input', (e) => { editDraft.subtasks[idx].title = e.target.value; });
+        const rm = document.createElement('button');
+        rm.type = 'button'; rm.textContent = '✕';
+        rm.addEventListener('click', () => { editDraft.subtasks.splice(idx, 1); render(); });
+        stRow.appendChild(cb); stRow.appendChild(titleIn); stRow.appendChild(rm);
+        wrap.appendChild(stRow);
+      });
+      const addStepBtn = document.createElement('button');
+      addStepBtn.type = 'button'; addStepBtn.className = 'edit-add-step'; addStepBtn.textContent = '+ Add step';
+      addStepBtn.addEventListener('click', () => { editDraft.subtasks.push({ id: 'st-' + Date.now(), title: '', done: false }); render(); });
+      wrap.appendChild(addStepBtn);
+
+      const dueLabel = document.createElement('div');
+      dueLabel.className = 'field-label'; dueLabel.textContent = 'Due date (optional)';
+      wrap.appendChild(dueLabel);
+      const dueInput = document.createElement('input');
+      dueInput.type = 'date'; dueInput.value = editDraft.due_date;
+      dueInput.addEventListener('input', (e) => { editDraft.due_date = e.target.value; });
+      wrap.appendChild(dueInput);
+    } else if (item.task_type === 'appointment') {
+      const stateSel = document.createElement('select');
+      [['needsScheduling', 'Needs scheduling'], ['booked', 'Booked']].forEach(([val, lbl]) => {
+        const opt = document.createElement('option'); opt.value = val; opt.textContent = lbl;
+        if (val === editDraft.appt_state) opt.selected = true;
+        stateSel.appendChild(opt);
+      });
+      stateSel.addEventListener('change', (e) => { editDraft.appt_state = e.target.value; render(); });
+      wrap.appendChild(stateSel);
+      if (editDraft.appt_state === 'booked') {
+        const dueInput = document.createElement('input');
+        dueInput.type = 'date'; dueInput.value = editDraft.due_date;
+        dueInput.addEventListener('input', (e) => { editDraft.due_date = e.target.value; });
+        wrap.appendChild(dueInput);
+      }
+    } else {
+      const dueLabel = document.createElement('div');
+      dueLabel.className = 'field-label'; dueLabel.textContent = 'Due date (optional)';
+      wrap.appendChild(dueLabel);
+      const dueInput = document.createElement('input');
+      dueInput.type = 'date'; dueInput.value = editDraft.due_date;
+      dueInput.addEventListener('input', (e) => { editDraft.due_date = e.target.value; });
+      wrap.appendChild(dueInput);
+    }
+
+    const actions = document.createElement('div');
+    actions.className = 'edit-actions';
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn-ghost'; cancelBtn.textContent = 'Cancel';
+    cancelBtn.addEventListener('click', cancelEdit);
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'btn-primary'; saveBtn.textContent = 'Save';
+    saveBtn.addEventListener('click', () => saveEdit(item.id));
+    actions.appendChild(cancelBtn); actions.appendChild(saveBtn);
+    wrap.appendChild(actions);
+
+    return wrap;
   }
 
   // --- Render ---
@@ -497,35 +661,23 @@
     const wrap = document.createElement('div');
     wrap.className = 'type-actions';
     const done = isDone(item);
-
     if (item.task_type === 'recurring') {
-      const btn = document.createElement('button');
-      btn.className = 'btn-sm';
-      btn.textContent = 'Done this cycle';
+      const btn = document.createElement('button'); btn.className = 'btn-sm'; btn.textContent = 'Done this cycle';
       btn.addEventListener('click', () => completeRecurring(item.id));
       wrap.appendChild(btn);
     } else if (item.task_type === 'appointment' && item.appt_state === 'needsScheduling') {
       const dateInput = document.createElement('input');
-      dateInput.type = 'date';
-      dateInput.className = 'date-input-sm';
-      dateInput.value = apptDateDrafts[item.id] || '';
+      dateInput.type = 'date'; dateInput.className = 'date-input-sm'; dateInput.value = apptDateDrafts[item.id] || '';
       dateInput.addEventListener('change', (e) => { apptDateDrafts[item.id] = e.target.value; });
-      const btn = document.createElement('button');
-      btn.className = 'btn-sm';
-      btn.textContent = 'Confirm';
+      const btn = document.createElement('button'); btn.className = 'btn-sm'; btn.textContent = 'Confirm';
       btn.addEventListener('click', () => confirmApptDate(item.id));
-      wrap.appendChild(dateInput);
-      wrap.appendChild(btn);
+      wrap.appendChild(dateInput); wrap.appendChild(btn);
     } else if (item.task_type === 'appointment' && item.appt_state === 'booked' && !done) {
-      const btn = document.createElement('button');
-      btn.className = 'btn-sm';
-      btn.textContent = 'Mark attended';
+      const btn = document.createElement('button'); btn.className = 'btn-sm'; btn.textContent = 'Mark attended';
       btn.addEventListener('click', () => markAttended(item.id));
       wrap.appendChild(btn);
     } else if (item.task_type === 'appointment' && done) {
-      const btn = document.createElement('button');
-      btn.className = 'btn-sm reopen';
-      btn.textContent = 'Reopen';
+      const btn = document.createElement('button'); btn.className = 'btn-sm reopen'; btn.textContent = 'Reopen';
       btn.addEventListener('click', () => reopenAppt(item.id));
       wrap.appendChild(btn);
     }
@@ -533,12 +685,19 @@
   }
 
   function renderItem(item) {
+    const row = document.createElement('div');
+
+    if (editingId === item.id) {
+      row.className = 'item';
+      row.appendChild(renderEditForm(item));
+      return row;
+    }
+
     const done = isDone(item);
     const cat = catMeta(item.category);
     const assignee = assigneeMeta(item.assignee);
     const badge = dueBadge(item);
 
-    const row = document.createElement('div');
     row.className = 'item' + (done ? ' done' : '') + (pendingIds.has(item.id) ? ' pending' : '');
 
     const top = document.createElement('div');
@@ -546,8 +705,7 @@
 
     if (item.task_type === 'simple' || item.task_type === 'appointment') {
       const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.checked = done;
+      checkbox.type = 'checkbox'; checkbox.checked = done;
       checkbox.disabled = item.task_type === 'appointment';
       if (item.task_type === 'simple') checkbox.addEventListener('change', () => toggleDone(item.id));
       top.appendChild(checkbox);
@@ -563,34 +721,28 @@
     const text = document.createElement('div');
     text.className = 'item-text';
     text.textContent = item.text;
+    text.addEventListener('click', () => startEdit(item));
     mid.appendChild(text);
 
     const metaRow = document.createElement('div');
     metaRow.className = 'meta-row';
     const assigneeBadge = document.createElement('span');
-    assigneeBadge.className = 'badge';
-    assigneeBadge.style.background = assignee.color;
-    assigneeBadge.textContent = assignee.label;
+    assigneeBadge.className = 'badge'; assigneeBadge.style.background = assignee.color; assigneeBadge.textContent = assignee.label;
     metaRow.appendChild(assigneeBadge);
-    if (groupBy === 'assignee') {
+    if (groupBy !== 'category') {
       const catBadge = document.createElement('span');
-      catBadge.className = 'badge-outline';
-      catBadge.style.color = cat.color;
-      catBadge.textContent = cat.label;
+      catBadge.className = 'badge-outline'; catBadge.style.color = cat.color; catBadge.textContent = cat.label;
       metaRow.appendChild(catBadge);
     }
     if (badge) {
       const b = document.createElement('span');
-      b.className = 'badge-outline';
-      b.style.color = badge.color;
-      b.textContent = badge.text;
+      b.className = 'badge-outline'; b.style.color = badge.color; b.textContent = badge.text;
       metaRow.appendChild(b);
     }
     if (item.task_type === 'project' && item.subtasks && item.subtasks.length) {
       const doneCt = item.subtasks.filter(s => s.done).length;
       const stepsBadge = document.createElement('span');
-      stepsBadge.className = 'badge-outline';
-      stepsBadge.style.color = 'var(--muted)';
+      stepsBadge.className = 'badge-outline'; stepsBadge.style.color = 'var(--muted)';
       stepsBadge.textContent = `${doneCt}/${item.subtasks.length} steps`;
       metaRow.appendChild(stepsBadge);
     }
@@ -598,36 +750,27 @@
 
     if (item.task_type === 'project' && item.subtasks && item.subtasks.length) {
       const doneCt = item.subtasks.filter(s => s.done).length;
-      const bar = document.createElement('div');
-      bar.className = 'progress-bar';
-      const fill = document.createElement('div');
-      fill.className = 'progress-fill';
+      const bar = document.createElement('div'); bar.className = 'progress-bar';
+      const fill = document.createElement('div'); fill.className = 'progress-fill';
       fill.style.width = `${(doneCt / item.subtasks.length) * 100}%`;
-      bar.appendChild(fill);
-      mid.appendChild(bar);
+      bar.appendChild(fill); mid.appendChild(bar);
 
       const expandBtn = document.createElement('button');
       expandBtn.className = 'expand-btn';
       const isExpanded = expandedIds.has(item.id);
       expandBtn.textContent = isExpanded ? 'Hide steps' : 'Show steps';
-      expandBtn.addEventListener('click', () => {
-        if (isExpanded) expandedIds.delete(item.id); else expandedIds.add(item.id);
-        render();
-      });
+      expandBtn.addEventListener('click', () => { isExpanded ? expandedIds.delete(item.id) : expandedIds.add(item.id); render(); });
       mid.appendChild(expandBtn);
 
       if (isExpanded) {
-        const stWrap = document.createElement('div');
-        stWrap.className = 'subtasks';
+        const stWrap = document.createElement('div'); stWrap.className = 'subtasks';
         item.subtasks.forEach(s => {
           const stRow = document.createElement('label');
           stRow.className = 'subtask' + (s.done ? ' done' : '');
           const cb = document.createElement('input');
-          cb.type = 'checkbox';
-          cb.checked = s.done;
+          cb.type = 'checkbox'; cb.checked = s.done;
           cb.addEventListener('change', () => toggleSubtask(item.id, s.id));
-          const label = document.createElement('span');
-          label.textContent = s.title;
+          const label = document.createElement('span'); label.textContent = s.title;
           stRow.appendChild(cb); stRow.appendChild(label);
           stWrap.appendChild(stRow);
         });
@@ -641,8 +784,7 @@
     top.appendChild(mid);
 
     const del = document.createElement('button');
-    del.className = 'del-btn';
-    del.textContent = '✕';
+    del.className = 'del-btn'; del.textContent = '✕';
     del.addEventListener('click', () => deleteItem(item.id));
     top.appendChild(del);
 
@@ -654,6 +796,30 @@
     board.className = '';
     board.innerHTML = '';
 
+    if (groupBy === 'urgency') {
+      URGENCY_BUCKETS.forEach(bucket => {
+        const allBucketItems = items.filter(i => getUrgency(i) === bucket.id);
+        const bucketItems = hideCompleted ? allBucketItems.filter(i => !isDone(i)) : allBucketItems;
+        if (bucketItems.length === 0) return;
+
+        const section = document.createElement('div');
+        section.className = 'category';
+        const labelRow = document.createElement('div');
+        labelRow.className = 'cat-label-row';
+        const label = document.createElement('div');
+        label.className = 'cat-label';
+        label.innerHTML = `<span class="dot" style="background:${bucket.color}"></span>${bucket.label}`;
+        labelRow.appendChild(label);
+        section.appendChild(labelRow);
+
+        const card = document.createElement('div'); card.className = 'card';
+        bucketItems.forEach(item => card.appendChild(renderItem(item)));
+        section.appendChild(card);
+        board.appendChild(section);
+      });
+      return;
+    }
+
     const groups = groupBy === 'assignee' ? ASSIGNEES : CATEGORIES;
     const groupKeyOf = (item) => groupBy === 'assignee' ? item.assignee : item.category;
 
@@ -663,40 +829,40 @@
       const section = document.createElement('div');
       section.className = 'category';
 
+      const labelRow = document.createElement('div');
+      labelRow.className = 'cat-label-row';
       const label = document.createElement('div');
       label.className = 'cat-label';
       label.innerHTML = `<span class="dot" style="background:${g.color}"></span>${g.label}`;
-      section.appendChild(label);
+      labelRow.appendChild(label);
+      const quickAdd = document.createElement('button');
+      quickAdd.className = 'quick-add-btn'; quickAdd.textContent = '+';
+      quickAdd.addEventListener('click', () => openAddPanel(groupBy, g.id));
+      labelRow.appendChild(quickAdd);
+      section.appendChild(labelRow);
 
-      const card = document.createElement('div');
-      card.className = 'card';
-
+      const card = document.createElement('div'); card.className = 'card';
       if (groupItems.length === 0) {
-        const empty = document.createElement('div');
-        empty.className = 'empty-cat';
+        const empty = document.createElement('div'); empty.className = 'empty-cat';
         empty.textContent = allGroupItems.length === 0 ? 'Nothing here yet.' : 'All done here.';
         card.appendChild(empty);
       } else {
         groupItems.forEach(item => card.appendChild(renderItem(item)));
       }
-
       section.appendChild(card);
       board.appendChild(section);
     });
   }
 
   // --- Wiring ---
-  addToggleBtn.addEventListener('click', () => {
-    addPanel.style.display = addPanel.style.display === 'none' ? 'block' : 'none';
-  });
-  cancelAddBtn.addEventListener('click', () => {
-    resetAddPanel();
-    addPanel.style.display = 'none';
-  });
+  addToggleBtn.addEventListener('click', () => { addPanel.style.display = addPanel.style.display === 'none' ? 'block' : 'none'; });
+  cancelAddBtn.addEventListener('click', () => { resetAddPanel(); addPanel.style.display = 'none'; });
   addBtn.addEventListener('click', addItem);
   newItemType.addEventListener('change', () => {
-    document.getElementById('typeExtra-recurring').style.display = newItemType.value === 'recurring' ? 'block' : 'none';
-    document.getElementById('typeExtra-project').style.display = newItemType.value === 'project' ? 'block' : 'none';
+    const t = newItemType.value;
+    document.getElementById('typeExtra-recurring').style.display = t === 'recurring' ? 'block' : 'none';
+    document.getElementById('typeExtra-project').style.display = t === 'project' ? 'block' : 'none';
+    document.getElementById('typeExtra-simple').style.display = t === 'simple' ? 'block' : 'none';
   });
   hideCompletedToggle.addEventListener('change', () => {
     hideCompleted = hideCompletedToggle.checked;
