@@ -129,9 +129,9 @@
   <div id="banner-slot"></div>
 
   <div class="group-toggle" id="groupToggle">
-    <button data-group="category" class="active">By Area</button>
-    <button data-group="assignee">By Person</button>
-    <button data-group="urgency">By Urgency</button>
+    <button data-group="urgency" class="active">Timeline</button>
+    <button data-group="category">Area</button>
+    <button data-group="assignee">Person</button>
   </div>
 
   <button class="add-toggle-btn" id="addToggleBtn">+ Add task</button>
@@ -153,6 +153,7 @@
       <option value="simple">Simple to-do</option>
       <option value="recurring">Recurring chore</option>
       <option value="project">Project (with steps)</option>
+      <option value="project_simple">Project (simple)</option>
       <option value="appointment">Appointment</option>
     </select>
 
@@ -214,10 +215,23 @@
     { id: 'upcoming', label: 'Upcoming', color: 'var(--mike)' },
     { id: 'someday', label: 'Someday', color: 'var(--later)' },
   ];
+  const TASK_TYPES = [
+    { id: 'simple', label: 'Simple to-do' },
+    { id: 'recurring', label: 'Recurring chore' },
+    { id: 'project', label: 'Project (with steps)' },
+    { id: 'project_simple', label: 'Project (simple)' },
+    { id: 'appointment', label: 'Appointment' },
+  ];
+  function typeBadgeLabel(t) {
+    if (t === 'recurring') return 'Recurring';
+    if (t === 'project' || t === 'project_simple') return 'Project';
+    if (t === 'appointment') return 'Appointment';
+    return null;
+  }
 
   let items = [];
   let hideCompleted = false;
-  let groupBy = 'category';
+  let groupBy = 'urgency';
   let expandedIds = new Set();
   let pendingIds = new Set();
   let editingId = null;
@@ -292,7 +306,7 @@
       const hideRow = (settings || []).find(s => s.key === 'hideCompleted');
       const groupRow = (settings || []).find(s => s.key === 'groupBy');
       hideCompleted = !!(hideRow && hideRow.value === true);
-      groupBy = (groupRow && ['assignee','category','urgency'].includes(groupRow.value)) ? groupRow.value : 'category';
+      groupBy = (groupRow && ['assignee','category','urgency'].includes(groupRow.value)) ? groupRow.value : 'urgency';
       hideCompletedToggle.checked = hideCompleted;
       updateGroupToggleUI();
       clearBanner();
@@ -306,9 +320,13 @@
   }
 
   function isDone(item) {
-    if (item.task_type === 'project') { const st = item.subtasks || []; return st.length > 0 && st.every(s => s.done); }
+    if (item.task_type === 'project') {
+      const st = item.subtasks || [];
+      if (st.length === 0) return !!item.done; // no steps yet - fall back to a plain done flag
+      return st.every(s => s.done);
+    }
     if (item.task_type === 'recurring') return false;
-    return !!item.done;
+    return !!item.done; // simple, project_simple, appointment
   }
 
   function effectiveDueDate(item) {
@@ -383,6 +401,7 @@
       payload.appt_state = 'needsScheduling';
       payload.done = false;
     } else {
+      // simple or project_simple
       payload.due_date = newItemDueSimple.value || null;
       payload.done = false;
     }
@@ -507,6 +526,7 @@
       title: item.text,
       category: item.category,
       assignee: item.assignee,
+      task_type: item.task_type,
       interval_days: item.interval_days || 7,
       due_date: item.due_date || '',
       appt_state: item.appt_state || 'needsScheduling',
@@ -524,16 +544,20 @@
       text: editDraft.title.trim() || item.text,
       category: editDraft.category,
       assignee: editDraft.assignee,
+      task_type: editDraft.task_type,
+      done: !!item.done,
     };
-    if (item.task_type === 'recurring') {
-      patch.interval_days = Number(editDraft.interval_days) || item.interval_days;
-    } else if (item.task_type === 'project') {
+    if (editDraft.task_type === 'recurring') {
+      patch.interval_days = Number(editDraft.interval_days) || 7;
+      patch.next_due = item.next_due || todayISO();
+    } else if (editDraft.task_type === 'project') {
       patch.subtasks = editDraft.subtasks.filter(s => s.title.trim());
       patch.due_date = editDraft.due_date || null;
-    } else if (item.task_type === 'appointment') {
+    } else if (editDraft.task_type === 'appointment') {
       patch.appt_state = editDraft.appt_state;
       patch.due_date = editDraft.appt_state === 'booked' ? (editDraft.due_date || null) : null;
     } else {
+      // simple or project_simple
       patch.due_date = editDraft.due_date || null;
     }
     Object.assign(item, patch);
@@ -572,13 +596,25 @@
     titleInput.addEventListener('input', (e) => { editDraft.title = e.target.value; });
     wrap.appendChild(titleInput);
 
+    const typeLabel = document.createElement('div');
+    typeLabel.className = 'field-label'; typeLabel.textContent = 'Type';
+    wrap.appendChild(typeLabel);
+    const typeSel = makeSelect(TASK_TYPES, editDraft.task_type, v => {
+      editDraft.task_type = v;
+      if (v === 'recurring' && !editDraft.interval_days) editDraft.interval_days = 7;
+      if (v === 'appointment' && !editDraft.appt_state) editDraft.appt_state = 'needsScheduling';
+      if (v === 'project' && !editDraft.subtasks) editDraft.subtasks = [];
+      render();
+    });
+    wrap.appendChild(typeSel);
+
     const row = document.createElement('div');
     row.className = 'edit-row';
     row.appendChild(makeSelect(CATEGORIES, editDraft.category, v => { editDraft.category = v; }));
     row.appendChild(makeSelect(ASSIGNEES, editDraft.assignee, v => { editDraft.assignee = v; }));
     wrap.appendChild(row);
 
-    if (item.task_type === 'recurring') {
+    if (editDraft.task_type === 'recurring') {
       const label = document.createElement('div');
       label.className = 'field-label'; label.textContent = 'Repeats every (days)';
       wrap.appendChild(label);
@@ -586,7 +622,7 @@
       intervalInput.type = 'number'; intervalInput.min = 1; intervalInput.value = editDraft.interval_days;
       intervalInput.addEventListener('input', (e) => { editDraft.interval_days = e.target.value; });
       wrap.appendChild(intervalInput);
-    } else if (item.task_type === 'project') {
+    } else if (editDraft.task_type === 'project') {
       const label = document.createElement('div');
       label.className = 'field-label'; label.textContent = 'Steps';
       wrap.appendChild(label);
@@ -617,7 +653,7 @@
       dueInput.type = 'date'; dueInput.value = editDraft.due_date;
       dueInput.addEventListener('input', (e) => { editDraft.due_date = e.target.value; });
       wrap.appendChild(dueInput);
-    } else if (item.task_type === 'appointment') {
+    } else if (editDraft.task_type === 'appointment') {
       const stateSel = document.createElement('select');
       [['needsScheduling', 'Needs scheduling'], ['booked', 'Booked']].forEach(([val, lbl]) => {
         const opt = document.createElement('option'); opt.value = val; opt.textContent = lbl;
@@ -703,11 +739,12 @@
     const top = document.createElement('div');
     top.className = 'item-top';
 
-    if (item.task_type === 'simple' || item.task_type === 'appointment') {
+    if (item.task_type === 'simple' || item.task_type === 'project_simple' || item.task_type === 'appointment' ||
+        (item.task_type === 'project' && (!item.subtasks || item.subtasks.length === 0))) {
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox'; checkbox.checked = done;
       checkbox.disabled = item.task_type === 'appointment';
-      if (item.task_type === 'simple') checkbox.addEventListener('change', () => toggleDone(item.id));
+      if (item.task_type !== 'appointment') checkbox.addEventListener('change', () => toggleDone(item.id));
       top.appendChild(checkbox);
     } else {
       const spacer = document.createElement('div');
@@ -726,6 +763,13 @@
     text.textContent = item.text;
     text.addEventListener('click', () => startEdit(item));
     contentRow.appendChild(text);
+
+    const typeLabel = typeBadgeLabel(item.task_type);
+    if (typeLabel) {
+      const typeBadge = document.createElement('span');
+      typeBadge.className = 'badge-outline'; typeBadge.style.color = 'var(--muted)'; typeBadge.textContent = typeLabel;
+      contentRow.appendChild(typeBadge);
+    }
 
     const assigneeBadge = document.createElement('span');
     assigneeBadge.className = 'badge'; assigneeBadge.style.background = assignee.color; assigneeBadge.textContent = assignee.label;
@@ -863,7 +907,7 @@
     const t = newItemType.value;
     document.getElementById('typeExtra-recurring').style.display = t === 'recurring' ? 'block' : 'none';
     document.getElementById('typeExtra-project').style.display = t === 'project' ? 'block' : 'none';
-    document.getElementById('typeExtra-simple').style.display = t === 'simple' ? 'block' : 'none';
+    document.getElementById('typeExtra-simple').style.display = (t === 'simple' || t === 'project_simple') ? 'block' : 'none';
   });
   hideCompletedToggle.addEventListener('change', () => {
     hideCompleted = hideCompletedToggle.checked;
