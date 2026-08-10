@@ -10,6 +10,7 @@
     --paper: #FAF7F0;
     --ink: #2E2A24;
     --preschool: #F4C95D;
+    --kids: #9B7FA6;
     --appt: #E37B5D;
     --shopping: #7FA37A;
     --household: #6E8FA8;
@@ -79,7 +80,7 @@
   .item-text:active { opacity: 0.6; }
   .item.done .item-text { text-decoration: line-through; color: var(--muted); }
   .item.pending { opacity: 0.5; }
-  .del-btn { background: none; border: none; color: var(--muted); font-size: 1rem; cursor: pointer; padding: 0 4px; line-height: 1; flex-shrink: 0; }
+  .del-btn { background: none; border: none; color: var(--muted); font-size: 1.05rem; cursor: pointer; padding: 6px 6px; line-height: 1; flex-shrink: 0; }
 
   .badge { font-size: 0.63rem; font-weight: 600; padding: 1px 7px; border-radius: 10px; color: #fff; white-space: nowrap; }
   .badge-outline { font-size: 0.63rem; font-weight: 600; padding: 1px 7px; border-radius: 10px; border: 1px solid currentColor; white-space: nowrap; }
@@ -117,8 +118,16 @@
   /* Toast */
   .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 10px 12px 10px 16px; border-radius: 10px; display: none; align-items: center; gap: 14px; font-size: 0.85rem; box-shadow: 0 4px 14px rgba(0,0,0,0.2); z-index: 50; max-width: calc(100% - 28px); }
 
-  .summary-line { font-size: 0.85rem; font-weight: 600; margin-bottom: 14px; }
+  .summary-line { font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
   .summary-line.calm { color: var(--muted); font-weight: 500; }
+
+  .who-am-i { font-size: 0.78rem; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .who-btn { border: none; color: #fff; font-size: 0.72rem; font-weight: 600; padding: 3px 10px; border-radius: 12px; cursor: pointer; }
+  .who-switch { background: none; border: none; color: var(--mike); text-decoration: underline; font-size: 0.75rem; cursor: pointer; padding: 0; }
+
+  .search-wrap { position: relative; margin-bottom: 12px; }
+  .search-wrap input { width: 100%; padding: 9px 32px 9px 12px; border-radius: 10px; border: 1.5px solid #E2DACB; font-size: 0.85rem; font-family: inherit; background: #fff; }
+  .search-clear { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); font-size: 0.85rem; cursor: pointer; padding: 6px; }
   .toast-undo { background: rgba(255,255,255,0.15); border: none; color: var(--paper); font-weight: 600; padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 0.8rem; white-space: nowrap; }
 </style>
 </head>
@@ -131,7 +140,14 @@
 
   <div id="summaryLine" class="summary-line"></div>
 
+  <div id="whoAmI" class="who-am-i"></div>
+
   <div id="banner-slot"></div>
+
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Search tasks…" />
+    <button id="searchClearBtn" class="search-clear" style="display:none;">✕</button>
+  </div>
 
   <div class="group-toggle" id="groupToggle">
     <button data-group="urgency" class="active">Timeline</button>
@@ -188,6 +204,11 @@
     Hide completed items
   </label>
 
+  <label class="hide-toggle" id="myStuffLabel" style="display:none;">
+    <input type="checkbox" id="myStuffToggle" />
+    Show only mine
+  </label>
+
   <div id="board" class="loading">Loading your list...</div>
 </div>
 
@@ -202,7 +223,8 @@
   const SUPABASE_KEY = 'sb_publishable_vW1vNsIeR5F4edP2OXtfTg_SyPHK8wa';
 
   const CATEGORIES = [
-    { id: 'preschool', label: 'Preschool', color: 'var(--preschool)' },
+    { id: 'preschool', label: 'School', color: 'var(--preschool)' },
+    { id: 'kids', label: 'Kids', color: 'var(--kids)' },
     { id: 'appt', label: 'Appointments', color: 'var(--appt)' },
     { id: 'shopping', label: 'Shopping', color: 'var(--shopping)' },
     { id: 'household', label: 'Household', color: 'var(--household)' },
@@ -245,6 +267,17 @@
   const apptDateDrafts = {};
   let toastTimer = null;
 
+  const CURRENT_USER_KEY = 'familyTodoCurrentUser';
+  const MY_STUFF_KEY = 'familyTodoMyStuffOnly';
+  let currentUser = localStorage.getItem(CURRENT_USER_KEY) || null;
+  let myStuffOnly = localStorage.getItem(MY_STUFF_KEY) === 'true';
+  let searchQuery = '';
+  const whoAmIEl = document.getElementById('whoAmI');
+  const myStuffLabel = document.getElementById('myStuffLabel');
+  const myStuffToggle = document.getElementById('myStuffToggle');
+  const searchInput = document.getElementById('searchInput');
+  const searchClearBtn = document.getElementById('searchClearBtn');
+
   const board = document.getElementById('board');
   const summaryLine = document.getElementById('summaryLine');
   const bannerSlot = document.getElementById('banner-slot');
@@ -267,7 +300,65 @@
   const toastUndoBtn = document.getElementById('toastUndoBtn');
 
   CATEGORIES.forEach(c => { const o = document.createElement('option'); o.value = c.id; o.textContent = c.label; newItemCat.appendChild(o); });
+  newItemCat.value = 'household';
   ASSIGNEES.forEach(a => { const o = document.createElement('option'); o.value = a.id; o.textContent = a.label; newItemAssignee.appendChild(o); });
+  newItemAssignee.value = currentUser || 'Shared';
+
+  function renderWhoAmI() {
+    whoAmIEl.innerHTML = '';
+    if (!currentUser) {
+      const label = document.createElement('span');
+      label.textContent = "Who's using this?";
+      whoAmIEl.appendChild(label);
+      ASSIGNEES.filter(a => a.id !== 'Shared').forEach(a => {
+        const btn = document.createElement('button');
+        btn.className = 'who-btn'; btn.style.background = a.color; btn.textContent = a.label;
+        btn.addEventListener('click', () => setCurrentUser(a.id));
+        whoAmIEl.appendChild(btn);
+      });
+    } else {
+      const meta = assigneeMeta(currentUser);
+      const text = document.createElement('span');
+      text.textContent = `Adding as ${meta.label}`;
+      const switchBtn = document.createElement('button');
+      switchBtn.className = 'who-switch'; switchBtn.textContent = 'switch';
+      switchBtn.addEventListener('click', () => setCurrentUser(null));
+      whoAmIEl.appendChild(text); whoAmIEl.appendChild(switchBtn);
+    }
+  }
+
+  function setCurrentUser(id) {
+    currentUser = id;
+    if (id) localStorage.setItem(CURRENT_USER_KEY, id); else localStorage.removeItem(CURRENT_USER_KEY);
+    renderWhoAmI();
+    newItemAssignee.value = currentUser || 'Shared';
+    updateMyStuffVisibility();
+    render();
+  }
+
+  function updateMyStuffVisibility() {
+    myStuffLabel.style.display = currentUser ? 'flex' : 'none';
+    if (!currentUser && myStuffOnly) {
+      myStuffOnly = false;
+      myStuffToggle.checked = false;
+      localStorage.removeItem(MY_STUFF_KEY);
+    }
+  }
+
+  function passesMyStuffFilter(item) {
+    if (!myStuffOnly || !currentUser) return true;
+    return item.assignee === currentUser || item.assignee === 'Shared';
+  }
+
+  function matchesSearch(item) {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return true;
+    return item.text.toLowerCase().includes(q);
+  }
+
+  renderWhoAmI();
+  myStuffToggle.checked = myStuffOnly;
+  updateMyStuffVisibility();
 
   function catMeta(id) { return CATEGORIES.find(c => c.id === id) || CATEGORIES[0]; }
   function assigneeMeta(id) { return ASSIGNEES.find(a => a.id === id) || ASSIGNEES[2]; }
@@ -371,6 +462,8 @@
   // --- Add ---
   function resetAddPanel() {
     newItemText.value = '';
+    newItemCat.value = 'household';
+    newItemAssignee.value = currentUser || 'Shared';
     newItemType.value = 'simple';
     newItemInterval.value = 7;
     newItemSubtasks.value = '';
@@ -420,9 +513,25 @@
       addPanel.style.display = 'none';
       clearBanner();
       render();
+      showToast(`Added "${created.text}"`, () => quickUndoAdd(created.id));
+      return;
     } catch (e) {
       console.error('Add failed:', e);
       showBanner("Couldn't save that item. Try again in a moment.");
+    }
+  }
+
+  async function quickUndoAdd(id) {
+    const idx = items.findIndex(i => i.id === id);
+    if (idx === -1) return;
+    items.splice(idx, 1);
+    render();
+    try {
+      await sb(`todos?id=eq.${id}`, { method: 'DELETE' });
+      clearBanner();
+    } catch (e) {
+      console.error('Undo-add failed:', e);
+      showBanner("Couldn't undo that. You can still delete it manually with the ✕.");
     }
   }
 
@@ -845,7 +954,7 @@
   }
 
   function renderSummary() {
-    const active = items.filter(i => !isDone(i));
+    const active = items.filter(i => !isDone(i) && passesMyStuffFilter(i));
     let overdue = 0, dueToday = 0, action = 0;
     active.forEach(i => {
       const u = getUrgency(i);
@@ -871,12 +980,15 @@
     renderSummary();
     board.className = '';
     board.innerHTML = '';
+    const searching = !!searchQuery.trim();
+    let sectionsRendered = 0;
 
     if (groupBy === 'urgency') {
       URGENCY_BUCKETS.forEach(bucket => {
-        const allBucketItems = items.filter(i => getUrgency(i) === bucket.id);
+        const allBucketItems = items.filter(i => getUrgency(i) === bucket.id && passesMyStuffFilter(i) && matchesSearch(i));
         const bucketItems = hideCompleted ? allBucketItems.filter(i => !isDone(i)) : allBucketItems;
         if (bucketItems.length === 0) return;
+        sectionsRendered++;
 
         const section = document.createElement('div');
         section.className = 'category';
@@ -893,41 +1005,53 @@
         section.appendChild(card);
         board.appendChild(section);
       });
-      return;
+    } else {
+      const groups = groupBy === 'assignee' ? ASSIGNEES : CATEGORIES;
+      const groupKeyOf = (item) => groupBy === 'assignee' ? item.assignee : item.category;
+
+      groups.forEach(g => {
+        const allGroupItems = items.filter(i => groupKeyOf(i) === g.id && matchesSearch(i));
+        const afterMyStuff = allGroupItems.filter(passesMyStuffFilter);
+        const groupItems = hideCompleted ? afterMyStuff.filter(i => !isDone(i)) : afterMyStuff;
+        if (searching && groupItems.length === 0) return;
+        sectionsRendered++;
+
+        const section = document.createElement('div');
+        section.className = 'category';
+
+        const labelRow = document.createElement('div');
+        labelRow.className = 'cat-label-row';
+        const label = document.createElement('div');
+        label.className = 'cat-label';
+        label.innerHTML = `<span class="dot" style="background:${g.color}"></span>${g.label}`;
+        labelRow.appendChild(label);
+        const quickAdd = document.createElement('button');
+        quickAdd.className = 'quick-add-btn'; quickAdd.textContent = '+';
+        quickAdd.addEventListener('click', () => openAddPanel(groupBy, g.id));
+        labelRow.appendChild(quickAdd);
+        section.appendChild(labelRow);
+
+        const card = document.createElement('div'); card.className = 'card';
+        if (groupItems.length === 0) {
+          const empty = document.createElement('div'); empty.className = 'empty-cat';
+          if (allGroupItems.length === 0) empty.textContent = 'Nothing here yet.';
+          else if (afterMyStuff.length === 0) empty.textContent = "Nothing of yours here.";
+          else empty.textContent = 'All done here.';
+          card.appendChild(empty);
+        } else {
+          groupItems.forEach(item => card.appendChild(renderItem(item)));
+        }
+        section.appendChild(card);
+        board.appendChild(section);
+      });
     }
 
-    const groups = groupBy === 'assignee' ? ASSIGNEES : CATEGORIES;
-    const groupKeyOf = (item) => groupBy === 'assignee' ? item.assignee : item.category;
-
-    groups.forEach(g => {
-      const allGroupItems = items.filter(i => groupKeyOf(i) === g.id);
-      const groupItems = hideCompleted ? allGroupItems.filter(i => !isDone(i)) : allGroupItems;
-      const section = document.createElement('div');
-      section.className = 'category';
-
-      const labelRow = document.createElement('div');
-      labelRow.className = 'cat-label-row';
-      const label = document.createElement('div');
-      label.className = 'cat-label';
-      label.innerHTML = `<span class="dot" style="background:${g.color}"></span>${g.label}`;
-      labelRow.appendChild(label);
-      const quickAdd = document.createElement('button');
-      quickAdd.className = 'quick-add-btn'; quickAdd.textContent = '+';
-      quickAdd.addEventListener('click', () => openAddPanel(groupBy, g.id));
-      labelRow.appendChild(quickAdd);
-      section.appendChild(labelRow);
-
-      const card = document.createElement('div'); card.className = 'card';
-      if (groupItems.length === 0) {
-        const empty = document.createElement('div'); empty.className = 'empty-cat';
-        empty.textContent = allGroupItems.length === 0 ? 'Nothing here yet.' : 'All done here.';
-        card.appendChild(empty);
-      } else {
-        groupItems.forEach(item => card.appendChild(renderItem(item)));
-      }
-      section.appendChild(card);
-      board.appendChild(section);
-    });
+    if (searching && sectionsRendered === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'loading';
+      empty.textContent = `No tasks match "${searchQuery.trim()}".`;
+      board.appendChild(empty);
+    }
   }
 
   // --- Wiring ---
@@ -944,6 +1068,23 @@
     hideCompleted = hideCompletedToggle.checked;
     render();
     saveSetting('hideCompleted', hideCompleted);
+  });
+  myStuffToggle.addEventListener('change', () => {
+    myStuffOnly = myStuffToggle.checked;
+    localStorage.setItem(MY_STUFF_KEY, myStuffOnly ? 'true' : 'false');
+    render();
+  });
+  searchInput.addEventListener('input', () => {
+    searchQuery = searchInput.value;
+    searchClearBtn.style.display = searchQuery ? 'block' : 'none';
+    render();
+  });
+  searchClearBtn.addEventListener('click', () => {
+    searchQuery = '';
+    searchInput.value = '';
+    searchClearBtn.style.display = 'none';
+    searchInput.focus();
+    render();
   });
   groupToggle.addEventListener('click', (e) => {
     const btn = e.target.closest('button[data-group]');
