@@ -66,7 +66,7 @@
 
   .category { margin-bottom: 18px; }
   .cat-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-  .cat-label { display: inline-flex; align-items: center; gap: 6px; font-family: 'Poppins', sans-serif; font-size: 0.78rem; font-weight: 600; padding: 3px 9px; border-radius: 20px; background: #F2EDE2; }
+  .cat-label { display: inline-flex; align-items: center; gap: 6px; font-family: 'Poppins', sans-serif; font-size: 0.78rem; font-weight: 600; padding: 3px 9px; border-radius: 20px; background: #F2EDE2; cursor: pointer; }
   .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
   .quick-add-btn { border: none; background: #F2EDE2; color: var(--ink); width: 21px; height: 21px; border-radius: 50%; font-size: 0.85rem; font-weight: 700; cursor: pointer; line-height: 1; }
 
@@ -89,6 +89,7 @@
   .avatar.wide { width: auto; height: 18px; padding: 0 6px; border-radius: 9px; font-size: 0.58rem; }
   .cat-icon-inline { font-size: 0.85rem; line-height: 1; }
   .due-text { font-size: 0.72rem; font-weight: 600; white-space: nowrap; }
+  .task-link { color: var(--mike); text-decoration: underline; }
 
   .type-actions { display: flex; align-items: center; gap: 6px; margin-top: 5px; flex-wrap: wrap; }
   .btn-sm { padding: 4px 9px; border-radius: 7px; border: none; font-size: 0.7rem; font-weight: 600; cursor: pointer; color: #fff; background: var(--shared); display: inline-flex; align-items: center; gap: 4px; }
@@ -237,6 +238,31 @@
   ];
   const CATEGORY_ICONS = { preschool: '🏫', kids: '🧸', appt: '📅', shopping: '🛒', household: '🏠', dog: '🐾' };
   function catIcon(id) { return CATEGORY_ICONS[id] || '•'; }
+
+  function linkifyText(container, text) {
+    const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
+    let lastIndex = 0;
+    let match;
+    let found = false;
+    while ((match = urlRegex.exec(text)) !== null) {
+      found = true;
+      if (match.index > lastIndex) container.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+      const trailingPunct = match[0].match(/[.,;:!?)]+$/);
+      const raw = trailingPunct ? match[0].slice(0, -trailingPunct[0].length) : match[0];
+      const href = raw.toLowerCase().startsWith('http') ? raw : `https://${raw}`;
+      let displayText = raw;
+      try { displayText = new URL(href).hostname.replace(/^www\./, ''); } catch (e) { /* fall back to raw text */ }
+      const a = document.createElement('a');
+      a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.className = 'task-link'; a.textContent = displayText;
+      a.addEventListener('click', (e) => e.stopPropagation());
+      container.appendChild(a);
+      if (trailingPunct) container.appendChild(document.createTextNode(trailingPunct[0]));
+      lastIndex = match.index + match[0].length;
+    }
+    if (!found) { container.textContent = text; return; }
+    if (lastIndex < text.length) container.appendChild(document.createTextNode(text.slice(lastIndex)));
+  }
   const ASSIGNEES = [
     { id: 'Mike', label: 'Mike', color: 'var(--mike)' },
     { id: 'Meesh', label: 'Meesh', color: 'var(--meesh)' },
@@ -891,7 +917,7 @@
 
     const text = document.createElement('div');
     text.className = 'item-text';
-    text.textContent = item.text;
+    linkifyText(text, item.text);
     text.addEventListener('click', () => startEdit(item));
     contentRow.appendChild(text);
 
@@ -1046,6 +1072,7 @@
         label.innerHTML = groupBy === 'category'
           ? `<span class="cat-icon-inline">${catIcon(g.id)}</span>${g.label}`
           : `<span class="dot" style="background:${g.color}"></span>${g.label}`;
+        label.addEventListener('click', () => openAddPanel(groupBy, g.id));
         labelRow.appendChild(label);
         const quickAdd = document.createElement('button');
         quickAdd.className = 'quick-add-btn'; quickAdd.textContent = '+';
