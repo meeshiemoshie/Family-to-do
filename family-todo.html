@@ -116,6 +116,9 @@
 
   /* Toast */
   .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 10px 12px 10px 16px; border-radius: 10px; display: none; align-items: center; gap: 14px; font-size: 0.85rem; box-shadow: 0 4px 14px rgba(0,0,0,0.2); z-index: 50; max-width: calc(100% - 28px); }
+
+  .summary-line { font-size: 0.85rem; font-weight: 600; margin-bottom: 14px; }
+  .summary-line.calm { color: var(--muted); font-weight: 500; }
   .toast-undo { background: rgba(255,255,255,0.15); border: none; color: var(--paper); font-weight: 600; padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 0.8rem; white-space: nowrap; }
 </style>
 </head>
@@ -125,6 +128,8 @@
     <h1>Family To-Do Board</h1>
     <div class="sub">Synced to Supabase. Tap a task to edit it.</div>
   </header>
+
+  <div id="summaryLine" class="summary-line"></div>
 
   <div id="banner-slot"></div>
 
@@ -191,6 +196,7 @@
   <button class="toast-undo" id="toastUndoBtn">Undo</button>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SUPABASE_URL = 'https://rmacrimrvkrenlhekjyc.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_vW1vNsIeR5F4edP2OXtfTg_SyPHK8wa';
@@ -240,6 +246,7 @@
   let toastTimer = null;
 
   const board = document.getElementById('board');
+  const summaryLine = document.getElementById('summaryLine');
   const bannerSlot = document.getElementById('banner-slot');
   const newItemText = document.getElementById('newItemText');
   const newItemCat = document.getElementById('newItemCat');
@@ -837,7 +844,31 @@
     return row;
   }
 
+  function renderSummary() {
+    const active = items.filter(i => !isDone(i));
+    let overdue = 0, dueToday = 0, action = 0;
+    active.forEach(i => {
+      const u = getUrgency(i);
+      if (u === 'overdue') overdue++;
+      else if (u === 'dueToday') dueToday++;
+      else if (u === 'action') action++;
+    });
+    const parts = [];
+    if (overdue) parts.push(`${overdue} overdue`);
+    if (dueToday) parts.push(`${dueToday} due today`);
+    if (action) parts.push(`${action} need${action === 1 ? 's' : ''} scheduling`);
+
+    if (parts.length === 0) {
+      summaryLine.textContent = 'Nothing urgent right now.';
+      summaryLine.classList.add('calm');
+    } else {
+      summaryLine.textContent = parts.join(' · ');
+      summaryLine.classList.remove('calm');
+    }
+  }
+
   function render() {
+    renderSummary();
     board.className = '';
     board.innerHTML = '';
 
@@ -923,7 +954,50 @@
     saveSetting('groupBy', groupBy);
   });
 
+  // --- Realtime sync (so Mike's and Meesh's phones stay in sync live) ---
+  function setupRealtime() {
+    const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    sbClient
+      .channel('family-todo-sync')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'todos' }, handleTodoChange)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'app_settings' }, handleSettingChange)
+      .subscribe((status) => {
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          console.error('Realtime subscription issue:', status);
+        }
+      });
+  }
+
+  function handleTodoChange(payload) {
+    if (payload.eventType === 'DELETE') {
+      const id = payload.old.id;
+      if (editingId === id) { editingId = null; editDraft = null; }
+      items = items.filter(i => i.id !== id);
+      render();
+      return;
+    }
+    const row = payload.new;
+    if (editingId === row.id) return; // don't yank the form out from under an active edit
+    const idx = items.findIndex(i => i.id === row.id);
+    if (idx === -1) items.push(row); else items[idx] = row;
+    render();
+  }
+
+  function handleSettingChange(payload) {
+    if (payload.eventType === 'DELETE') return;
+    const row = payload.new;
+    if (row.key === 'hideCompleted') {
+      hideCompleted = row.value === true;
+      hideCompletedToggle.checked = hideCompleted;
+    } else if (row.key === 'groupBy' && ['assignee', 'category', 'urgency'].includes(row.value)) {
+      groupBy = row.value;
+      updateGroupToggleUI();
+    }
+    render();
+  }
+
   loadAll();
+  setupRealtime();
 </script>
 </body>
 </html>
